@@ -1,0 +1,29 @@
+.filter_icon_css {
+    width: 20px !important;
+}
+.filter_popup_css {
+    display: inline-block;
+    padding: 0px 0px 10px 15px;
+}
+/* .dataTable_th_css {
+    color: #00389d;
+} */
+/* .dataTable_td_css{
+    cursor: pointer;
+    text-decoration: none;
+    color: #00389d  !important;
+} */
+
+.sorting.sorting_asc, .sorting.sorting_desc {
+    color: #00389d;
+}
+
+/*  */
+.company-selector .c-name-td, .active-selector .symbol-td,  .market-selector .market-td, .pe-selector .pe-td, .sector-selector .sector-td, .industry-selector .industry-td,  .country-selector .country-td, .price-selector .price-td, .change-selector .percent-td, .volume-selector .volume-td, .avg-volu-selector .avg-volume-td     {
+    background-color: #dcdfeb;
+}
+@media (max-width: 767.98px){
+    .pagenation_warp {
+        margin-bottom: 65px;
+    }
+}

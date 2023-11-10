@@ -1,0 +1,30 @@
+<div *ngIf="showNewsPopup" class="backdrop"></div>
+<div *ngIf="showNewsPopup" class="jw-modal newsdetailpopup">
+  <!-- <div class="addimg img1"> 
+      <img  width="180px" src="../../assets/img/lg_vtl_add.jpg" alt="">
+  </div>  -->
+  <div class="jw-modal-body rounded-0">
+    <div  class="newspopup">
+      <div class="top-row">
+        <button (click)="closeNews()" class="row-btn">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="head-cont">
+        <div class="info-heading">{{selectedNews.source_name}} - {{selectedNews.date | date:'M.d.yy'}}</div>
+        <div class="news-heading">{{selectedNews.title}}</div>
+      </div>
+      <div class="descrp">{{selectedNews.text}}</div>
+      <div class="text-center popup_action_btn">
+          <a [href]="selectedNews.url" target="_blank" class="btn btn-primary">Continue to Full Article</a>
+          <a class="btn btn-dark" style="color: #fff;" (click)="closeNews()">See more news about {{symbol}}
+          </a>
+        </div>
+      <div class="nws_in_adss">
+      </div>
+    </div>
+  </div>
+  <!-- <div class="addimg img2"> 
+      <img  width="180px" src="../../assets/img/lg_vtl_add2.jpg" alt="">
+  </div>  -->
+</div>

@@ -1,0 +1,26 @@
+ 
+a.tooltips {
+    /* border-bottom: 1px dashed !important; */
+    text-decoration: none !important;
+    color: #000 !important;
+  }
+  a.tooltips:hover {
+    cursor: help !important;
+    position: relative !important;
+  }
+  a.tooltips span {
+    display: none !important;
+  }
+  a.tooltips:hover span {
+    border: #666 2px dotted !important;
+    padding: 5px 20px 5px 5px !important;
+    display: block !important;
+    z-index: 100 !important;
+    background: #ffffff !important;
+    left: 0px !important;
+    margin: 15px !important;
+    width: 300px !important;
+    position: absolute !important;
+    top: 15px !important;
+    text-decoration: none !important;
+  }

@@ -1,0 +1,40 @@
+.jw-modal {
+    position: absolute;
+    height: 100% !important;
+    width: 100%;
+    background: transparent !important;
+}
+.jw-modal-body {
+    width: 47.8vw;
+    /* min-height: 700px; */
+    position: absolute;
+    background: #faf8f7;
+    z-index: 100000001;
+    left: 27.5vw;
+    /* top: 5vh; */
+    /* padding-bottom: 20px; */
+    border-radius: 5px;
+}
+.padding {
+    padding: 10px;
+}
+.width-100 {
+    width: 100% !important;
+    height: 90px;
+}
+.width-50 {
+    width: 50%;
+}
+@media (max-width: 648px) {
+    .jw-modal-body {
+        left: 0;
+        position: absolute;
+        background: #faf8f7;
+        z-index: 100000001;
+        top: 20vh;
+        margin-left: 5vw;
+        border-radius: 5px;
+        width: 90vw;
+    }
+}
+

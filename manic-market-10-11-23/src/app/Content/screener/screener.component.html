@@ -1,0 +1,387 @@
+<!-- Change Percentage Bar View ALL Page Strat -->
+<!-- <div class="container cp_info_first">
+  <div class="row">
+    <div class="col-md-9 cp_info">
+      <div class="cpinfo_head topheaddata_bar">
+        <ul>
+          <li class="item red" *ngFor="let item of changeFinance" [ngClass]="item.is_blue_bar ? 'borderbottom' : 'bordernone' && item.symbol == 'US05Y' ? 'symbol_none' : 'cp'">
+            <div *ngIf="item.symbol !== 'US05Y' && item.symbol !== 'US30Y'" >
+              <span class="copany_short">{{item.symbol}}</span>  
+              <span class="ml-2" [ngClass]="{'company_value': (item?.changePercent >  0), 'text-warning': (item?.changePercent <  0)}">{{item?.changePercent > 0? '': ''}}{{item?.changePercent > 0? '+': ''}}{{(item?.changePercent || item?.changePercent == 0) ? ((item?.changePercent) | number : '1.2-2' ): 'N/A'}}%</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div> -->
+<!-- Change Percentage Bar View ALL Page End -->
+
+<div class="main_warper container">
+  <div class="row justify-content-center">
+    <!-- <div class="col-md-2" id="sidebar_warper">
+        <div class="left_sidebar">
+        </div>
+      </div> -->
+    <div class="main-content col-md-12 my_watchlist_main">
+      <div class="page-content">
+        <div class="row">
+          <div class="col-md-12 coman_heading">
+            <h2 class="page-title" style="display:inline-block;">Screener</h2>
+            <a class="filter_popup_css" href="javascript:void(0);" (click)="bindDropDown()" data-toggle="modal" data-target="#filter_popup">
+              <img src="assets/img/SVG/filter_icon.svg" class="filter_icon_css" alt="">
+            </a>
+            <!-- <button type="button" class="btn btn-outline-info ml-3"  (click)="bindDropDown()" data-toggle="modal" data-target="#filter_popup"> <i
+              class="fa fa-filter" aria-hidden="true"></i> Filter by
+            </button> -->
+          </div>
+          <div class="col-md-6 filter-rslt">
+            <ng-container *ngFor="let item of this.filterModel.Country;let i=index">
+              <span class="fl_rsltagg"><i (click)="onRemoveCountry(i);this.reLoadResult();" class="fa fa-times-circle"
+                  aria-hidden="true"></i>{{item}}</span>
+            </ng-container>
+            <span class="fl_rsltagg" *ngIf="this.filterModel?.MarketCap"><i class="fa fa-times-circle"
+                (click)="this.filterModel.MarketCap=undefined;this.reLoadResult();"
+                aria-hidden="true"></i>{{this.filterModel?.MarketCap}}(test)</span>
+            <span *ngIf="filterModel?.Price?.Min && filterModel?.Price?.Max" class="fl_rsltagg"><i
+                (click)="this.filterModel.Price.Min=undefined;this.filterModel.Price.Max=undefined;this.reLoadResult();"
+                class="fa fa-times-circle" aria-hidden="true"></i>{{(filterModel?.Price?.Min ?
+              filterModel?.Price?.Min:'')+"-"+(filterModel?.Price?.Min? filterModel?.Price?.Max:'')}}</span>
+            <ng-container *ngFor="let item of this.filterModel.Sector;let i=index">
+              <span class="fl_rsltagg"><i (click)="onRemoveSector(i);this.reLoadResult();" class="fa fa-times-circle"
+                  aria-hidden="true"></i>{{item}}</span>
+            </ng-container>
+            <ng-container *ngFor="let item of this.filterModel.Industry;let i=index">
+              <span class="fl_rsltagg"><i (click)="onRemoveIndustry(i);this.reLoadResult();" class="fa fa-times-circle"
+                  aria-hidden="true"></i>{{item}}</span>
+            </ng-container>
+            <!-- <span class="fl_rsltagg"><i class="fa fa-times-circle" aria-hidden="true"></i>USA</span>
+              <span class="fl_rsltagg"><i class="fa fa-times-circle" aria-hidden="true"></i>All Caps</span>
+              <span class="fl_rsltagg"><i class="fa fa-times-circle" aria-hidden="true"></i>0-1000.00</span>
+              <span class="fl_rsltagg"><i class="fa fa-times-circle" aria-hidden="true"></i>USA</span>
+              <span class="fl_rsltagg"><i class="fa fa-times-circle" aria-hidden="true"></i>All Caps</span>
+              <span class="fl_rsltagg"><i class="fa fa-times-circle" aria-hidden="true"></i>0-1000.00</span>
+              <span class="fl_rsltagg"><i class="fa fa-times-circle" aria-hidden="true"></i>USA</span>
+              <span class="fl_rsltagg"><i class="fa fa-times-circle" aria-hidden="true"></i>All Caps</span>
+              <span class="fl_rsltagg"><i class="fa fa-times-circle" aria-hidden="true"></i>0-1000.00</span>
+              <span class="fl_rsltagg"><i class="fa fa-times-circle" aria-hidden="true"></i>USA</span>
+              <span class="fl_rsltagg"><i class="fa fa-times-circle" aria-hidden="true"></i>All Caps</span>
+              <span class="fl_rsltagg"><i class="fa fa-times-circle" aria-hidden="true"></i>0-1000.00</span>
+            -->
+          </div>
+        </div>
+        <div class="row mt-3  mb-3">
+          <div class="col-md-12">
+            <div class="table-responsive">
+              <table id="screenerdata" class="table market-selector" style="width:100%" #screenerdata datatable [dtOptions]="dtOptions"
+                [dtTrigger]="dtTrigger">
+                <thead>
+                  <tr>
+                    <th class="symbol-name">Symbol</th>
+                    <th class="company-name" style="min-width: 120px;">Company Name</th>
+                    <th class="market-cap" style="min-width: 70px;">Market Cap</th>
+                    <th class="pe">P/E</th>
+                    <!-- <th>Company</th> -->
+                    <th class="sector" style="min-width: 150px;">Sector</th>
+                    <th class="industry" style="min-width: 160px;">Industry</th>
+                    <th class="country" style="min-width: 70px;">Country</th>
+                    <th class="price" >Price</th>
+                    <th class="change" >% Change</th>
+                    <th class="volume">Volume</th>
+                    <th class="avg-volu">Avg. Vol.</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody *ngIf="model?.length != 0">
+                  <tr *ngFor="let item of model">
+                    <td class="symbol-td">
+                      <span>
+                        <a style="cursor: pointer;text-decoration: none;" class="text-dark"
+                        [routerLink]="['/company-profile', item?.symbol]">
+                        <strong class="d-block">{{ item?.symbol ? item?.symbol:'N/A'
+                          }}</strong>
+                      </a>
+                      </span>
+                    </td>
+                    <td class="c-name-td active_css">
+                      <span>
+                        <a class="text-dark"
+                        [routerLink]="['/company-profile', item?.symbol]">
+                        <span class="d-block">{{ item?.companyName? item?.companyName:'N/A'}}</span>
+                      </a>
+                      </span>
+                    </td>
+                    <td class="market-td">
+                      <span>
+                        {{item?.company_quote_data?.marketCap?(item?.company_quote_data?.marketCap|AmountFormat:
+                          2):'N/A'}}
+                      </span>
+                    </td>
+                    <td class="pe-td">
+                      <span>
+                        {{item?.company_quote_data?.peRatio?(item?.company_quote_data?.peRatio | number : '.2-2' ):'N/A'}}
+                      </span>
+                    </td>
+                    <!-- <td style="cursor: pointer;" class="a-no-decore" [title]="item?.companyName">
+                      <a target="_blank" [routerLink]="['/company-profile', item?.symbol]"> {{ item?.companyName?
+                        (item?.companyName.length> 30 ? item?.companyName.substring(0,27)+'...' : item?.companyName )
+                        :'N/A'}}</a>
+                    </td> -->
+                    <td class="sector-td" [title]="item?.sector">
+                      <span>
+                        {{item?.sector? (item?.sector.length> 30 ?
+                          item?.sector.substring(0,27)+'...' : item?.sector )
+                          :'N/A'}}
+                      </span>
+                    </td>
+                    <td class="industry-td" [title]="item?.industry">
+                      <span>
+                        {{item?.industry? (item?.industry.length> 30 ?
+                          item?.industry.substring(0,27)+'...' : item?.industry ) :'N/A'}}
+                      </span>
+                    </td>
+                    <td class="country-td">
+                      <span>
+                        {{item?.country?item?.country:'N/A'}}
+                      </span>
+                    </td>
+                    <td class="price-td">
+                      <span>{{item?.company_quote_data?.latestPrice?
+                        "$"+ (item?.company_quote_data?.latestPrice | number : '.2-2'):'N/A'}}</span>
+                      <!-- <span
+                        [ngClass]="{'text-success': (item?.company_quote_data?.latestPrice >  item?.company_quote_data?.previousClose), 'text-warning': (item?.company_quote_data?.latestPrice <  item?.company_quote_data?.previousClose)}">{{item?.company_quote_data?.latestPrice?
+                        "$"+ (item?.company_quote_data?.latestPrice | number : '.2-3'):'N/A'}}
+                      </span> -->
+                    </td>
+                    <td class="percent-td">
+                    <span [ngClass]="{'text-success': (item?.company_quote_data?.changePercent >  0), 'text-warning': (item?.company_quote_data?.changePercent <  0)}">
+                        {{item?.company_quote_data?.changePercent > 0? '+': ''}}{{(item?.company_quote_data?.changePercent || item?.company_quote_data?.changePercent == 0) ? ((item?.company_quote_data?.changePercent * 100) | number : '1.2-2' ): 'N/A'}}%
+                        <!-- {{item?.company_quote_data?.changePercent? (item?.company_quote_data?.changePercent | number : '.2-3' ):'N/A'}} -->
+                    </span>
+                    </td>
+                    <td class="volume-td">
+                      <span>
+                        {{item?.company_quote_data?.latestVolume? (item?.company_quote_data?.latestVolume | number) :'N/A'}}
+                      </span>
+                    </td>
+                    <td class="avg-volume-td">
+                      <span>
+                        {{item?.company_quote_data?.avgTotalVolume? (item?.company_quote_data?.avgTotalVolume | number)  :'N/A'}}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody *ngIf="model?.length == 0">
+                  <!-- <tr>
+                    <td colspan="3" class="no-data-available">No data!</td>
+                  </tr> -->
+                </tbody>
+              </table>
+            </div>
+              <div class="pagenation_warp">
+                <ul *ngIf="demoarray.length > 0" class="pagenation">
+                  <li *ngIf="pageselect > 1" (click)="pageChange(pageselect-1)">prev</li>
+                  <ng-container *ngFor="let val of demoarray; let i = index;">
+                    <span *ngIf="valuecheck(val,demoarray[i-1])">...</span>
+                    <li (click)="pageChange(val)" [ngClass]="val == pageselect ? 'active':'' ">{{val}}</li>
+                  </ng-container>
+                  <li *ngIf="pageselect != pagenum" (click)="pageChange(pageselect+1)">next</li>
+                </ul>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- FILTER POPUP -->
+<div class="modal fade filter_modal" id="filter_popup" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-body screener_filter">
+        <button type="button" (click)=" this.ResetFilter('all',true);" class="closebtn_icon" data-dismiss="modal"
+        aria-label="Close">
+        <i class="fa fa-times" aria-hidden="true"></i>
+      </button>
+        <div class="row">
+          <!-- <div class="col-md-4 fl_sidebar">
+           <ul>
+              <li>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" [(ngModel)]="filterConfigModel.IsShowCountry"
+                    id="defaultCheck1" [checked]="filterConfigModel?.IsShowCountry"
+                    (click)="ResetFilter('country',true)">
+                  <label class="form-check-label" for="defaultCheck1">Country</label>
+                </div>
+              </li>
+              <li>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" [(ngModel)]="filterConfigModel.IsShowMarketCap"
+                    id="defaultCheck2" [checked]="filterConfigModel?.IsShowMarketCap"
+                    (click)="ResetFilter('marketcap',true)">
+                  <label class="form-check-label" for="defaultCheck2">Market Cap (intraday)</label>
+                </div>
+              </li>
+              <li>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" [(ngModel)]="filterConfigModel.IsShowPrice"
+                    id="defaultCheck3" [checked]="filterConfigModel?.IsShowPrice" (click)="ResetFilter('price',true)">
+                  <label class="form-check-label" for="defaultCheck3">Price (intraday)</label>
+                </div>
+              </li>
+              <li>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" [(ngModel)]="filterConfigModel.IsShowSector"
+                    id="defaultCheck4" [checked]="filterConfigModel?.IsShowSector" (click)="ResetFilter('sector',true)">
+                  <label class="form-check-label" for="defaultCheck4">Sector</label>
+                </div>
+              </li>
+              <li>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" [(ngModel)]="filterConfigModel.IsShowIndustry"
+                    id="defaultCheck5" [checked]="filterConfigModel?.IsShowIndustry"
+                    (click)="ResetFilter('industry',true)">
+                  <label class="form-check-label" for="defaultCheck5">Industry</label>
+                </div>
+              </li>
+            </ul>
+          </div> -->
+          <div class="col-md-12">
+            <div *ngIf="filterConfigModel?.IsShowMarketCap" class="form-group">
+              <label>Market Cap (intraday)</label>
+              <div class="market_cap">
+                <ul>
+                  <ng-container *ngFor="let item of MarketCapFilterValues">
+                    <li [ngClass]="{'active': this.filterModel.MarketCap == item}">
+                      <a href="javascript:void(0);" (click)="this.filterModel.MarketCap=item">{{item}}</a>
+                    </li>
+                  </ng-container>
+                </ul>
+              </div>
+            </div>
+            <div *ngIf="filterConfigModel?.IsShowSector" class="form-group field_theming">
+              <label>Sector</label>
+              <ng-select (change)="selectedSector($event)" class="small_input" bindLabel="Sector"
+                placeholder="Enter Sector" [searchable]="true" [ngModelOptions]="{standalone: true}"
+                [clearable]="true" [(ngModel)]="filterModel.Sector" appendTo="body" [multiple]="true">
+                <ng-option value="{{item.value}}" *ngFor="let item of ddlSector">
+                  {{item.value}}
+                </ng-option>
+              </ng-select>
+            </div>
+            <div *ngIf="filterConfigModel?.IsShowIndustry"  class="form-group field_theming">
+              <label>Industry</label>
+              <ng-select [disabled]="!ddlIndustry.length" class="small_input" bindLabel="Industry"
+                    placeholder="Enter Industry" [searchable]="true" [ngModelOptions]="{standalone: true}"
+                    [clearable]="true" [(ngModel)]="filterModel.Industry"  appendTo="body" [multiple]="true">
+                    <ng-option value="{{item.value}}" *ngFor="let item of ddlIndustry">
+                      {{item.value}}
+                    </ng-option>
+                  </ng-select>
+            </div>
+            <div *ngIf="filterConfigModel?.IsShowCountry" class="form-group field_theming">
+              <label>Country</label>
+              <ng-select class="small_input" bindLabel="Country" placeholder="Enter Country" [searchable]="true"
+                [ngModelOptions]="{standalone: true}" [clearable]="true" [(ngModel)]="filterModel.Country"
+                appendTo="body" [multiple]="true">
+                <ng-option value="{{item.value}}" *ngFor="let item of countrylist">
+                  {{item.value}}
+                </ng-option>
+              </ng-select>
+            </div>
+            <div *ngIf="filterConfigModel?.IsShowPrice" class="form-group">
+              <label>Price (intraday)</label>
+              <div class="price_count">
+                <input type="number" [(ngModel)]="filterModel?.Price.Min" [max]="filterModel?.Price.Max"
+                  class="small_input" (keypress)="_commonService.NumberOnly($event)">
+                <span class="to_divider"> to</span>
+                <input type="number" [(ngModel)]="filterModel?.Price.Max" [min]="filterModel?.Price.Min"
+                  class="small_input" (keypress)="_commonService.NumberOnly($event)">
+              </div>
+            </div>
+            <div class="fl_resulthead">
+              <ng-container *ngFor="let item of this.filterModel.Country;let i=index">
+                <span class="fl_rsltagg">{{item}}<i (click)="onRemoveCountry(i)" class="fa fa-times"
+                  aria-hidden="true"></i></span>
+              </ng-container>
+              <span class="fl_rsltagg" *ngIf="this.filterModel?.MarketCap">{{this.filterModel?.MarketCap}}<i class="fa fa-times"
+                (click)="this.filterModel.MarketCap=undefined"
+                aria-hidden="true"></i></span>
+              <span *ngIf="filterModel?.Price?.Min && filterModel?.Price?.Max" class="fl_rsltagg">{{(filterModel?.Price?.Min ?
+                filterModel?.Price?.Min:'')+"-"+(filterModel?.Price?.Min? filterModel?.Price?.Max:'')}}<i
+                (click)="this.filterModel.Price.Min=undefined;this.filterModel.Price.Max=undefined"
+                class="fa fa-times" aria-hidden="true"></i></span>
+              <ng-container *ngFor="let item of this.filterModel.Sector;let i=index">
+                <span class="fl_rsltagg">{{item}}<i (click)="onRemoveSector(i)" class="fa fa-times"
+                  aria-hidden="true"></i></span>
+              </ng-container>
+              <ng-container *ngFor="let item of this.filterModel.Industry;let i=index">
+                <span class="fl_rsltagg">{{item}}<i (click)="onRemoveIndustry(i)" class="fa fa-times"
+                  aria-hidden="true"></i></span>
+              </ng-container>
+            </div>
+            <div class="result_action">
+              <button type="button" (click)="this.reLoadResult();" class="filter btn-flapply" data-dismiss="modal"
+                aria-label="Apply filter">
+                Apply
+              </button>
+              <button type="button" (click)=" this.ResetFilter('all',true);" class="close" data-dismiss="modal"
+                aria-label="Close">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="message_btn_fx">
+  <button class="message_btn" type="button" data-toggle="modal" (click)="feedbackInput = '';"
+    data-target="#message_bottom" (click)="gotoLoginPage()">
+    <img src="../../assets/img/asset.png">
+  </button>
+</div>
+<div class="modal fade add_queto_modal message_bottom" id="message_bottom" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md mob" role="document">
+    <div class="modal-content" *ngIf="isLoggedIn">
+      <div class="modal-header">
+        <h2>We’d love to hear from you as we continue to improve our product!</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span><i class="fa fa-times" aria-hidden="true"></i></span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- <form> -->
+        <div class="form_inner">
+          <textarea [(ngModel)]="feedbackInput" class="form-control"
+            placeholder="Please let us know your thoughts..."></textarea>
+        </div>
+        <div class="add_termactin">
+          <button type="button" data-dismiss="modal" [disabled]="!feedbackInput" aria-label="Close"
+            (click)="saveFeedback()" class="btn btn-success">Submit</button>
+          <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-secondary">Cancel</button>
+        </div>
+        <!-- </form> -->
+      </div>
+    </div>
+    
+    <!-- <div class="modal-content" *ngIf="!isLoggedIn">
+      <div class="modal-header">
+        <h2>You are not logged in . You must be first login. </h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span><i class="fa fa-times" aria-hidden="true"></i></span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="add_termactin">
+          <button type="button" data-dismiss="modal" aria-label="Close" [routerLink]="['/login']"
+            class="btn btn-success">Login</button>
+        </div>
+      </div>
+    </div> -->
+  </div>
+</div>
+

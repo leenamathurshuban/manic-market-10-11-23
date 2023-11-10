@@ -1,0 +1,68 @@
+.info-model {
+    display: flex;
+    flex-direction: row;
+}
+input#file {
+    display: none;
+    /* width: 100%;
+    padding: 120px 0 0 0;
+    height: 100px;
+    overflow: hidden;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    background: url('https://cdn1.iconfinder.com/data/icons/hawcons/32/698394-icon-130-cloud-upload-512.png') center center no-repeat #e4e4e4;
+    border-radius: 20px;
+    background-size: 60px 60px; */
+  }
+  .modal_btn_left {
+    margin-left: 97px;
+  }
+  .modal_btn_right .btn-success{
+    margin-left: 15px;
+    background-color: #e2e6ea;
+    border-color: #e2e6ea;
+    color: #212529;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  /* .modal-body .btn-danger{
+    background-color:#e2e6ea;
+    border-color:#e2e6ea;
+    color: #212529;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+} */
+  @media only screen and (max-width: 600px) {
+    .modal_btn_left {
+        margin-left: 27px;
+      }
+      .modal_btn_right .btn-success{
+        margin-left: 18px;
+        background-color: #e2e6ea;
+        border-color: #e2e6ea;
+        color: #212529;
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: 500;
+      }
+  }
+  .profile_edit_form input[type="checkbox"] {
+    width: auto;
+  }
+  .checkeBox_css {
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .radioBtn {
+    position: relative;
+    bottom: 26px;
+    left: 10px;
+  }
+  .radioBtn2 {
+    position: relative;
+    bottom: 18px;
+    left: 10px;
+  }

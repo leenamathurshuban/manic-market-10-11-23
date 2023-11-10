@@ -1,0 +1,53 @@
+<div class="main_warper container-fluid">
+  <div class="row justify-content-center">
+    <div class="main-content col-md-11">
+      <div class="page-content quotes">
+        <div class="row">
+          <div class="col-md-6">
+            <h2 class="page-title">Admin - User Management</h2>
+          </div>
+          <div class="col-md-6">
+            <div class="search_quote finance">
+              <i class="fa fa-search-plus"></i>
+              <!-- <input type="text" [(ngModel)]="searchText" placeholder="Search User"> -->
+              <input type="text" [(ngModel)]="searchField" (keyup.enter)="searchUser($event.target.value)" placeholder="Search User"/>
+              <button matSuffix mat-icon-button aria-label="Clear" (click)="clearSearchField()" *ngIf="searchField" class="clearbtn">
+                <mat-icon class="mat_icon_clear">close</mat-icon>
+              </button>
+              <!-- <button mat-button mat-icon-button matSuffix (click)="clearSearchField()" *ngIf="searchField">
+                <mat-icon svgIcon="close"></mat-icon>
+                <i class="fa fa-search-plus"></i>
+              </button> -->
+            </div>
+          </div>
+        </div>
+        <div class="user_menegement_table">
+          <table id="watchList" class="table table-striped" style="width:100%" #data datatable [dtOptions]="dtOptions"
+            [dtTrigger]="dtTrigger">
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Username</th>
+                <th>Joined</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of this.usersList | filter:searchText">
+                <td>{{ user.email }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.date_joined | date : "MM/dd/yyyy" }}</td>
+                <td class="remove_btn" (click)="deleteUser(user)">remove</td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="this.usersList?.length == 0">
+              <tr>
+                <td colspan="3" class="no-data-available">No data!</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,10 @@
+.publrs_datawarp_quote {
+    padding-top: 20px;
+    max-height: 350px;
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+}
+.svg_icon{
+    width: 20px;
+}

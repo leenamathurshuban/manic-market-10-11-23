@@ -1,0 +1,156 @@
+<!-- <div *ngIf="userInfo">
+    <input (change)="uploadFile($event)" type="file"> <span>Change Profile Image</span>
+    <div class="info-model">
+        <div>First Name</div>
+        <input placeholder="Enter first name" [(ngModel)]="userInfo.first_name"/>
+        <button (click)="modifyInfo('first_name')">Modify</button>
+    </div>
+    <div class="info-model">
+        <div>Last Name</div>
+        <input placeholder="Enter last name" [(ngModel)]="userInfo.last_name"/>
+        <button (click)="modifyInfo('last_name')">Modify</button>
+    </div>
+    <div class="info-model">
+        <div>Email</div>
+        <input placeholder="Enter email" [(ngModel)]="userInfo.email"/>
+        <button (click)="modifyInfo('email')">Modify</button>
+    </div>
+    <div class="info-model">
+        <button (click)="modifyInfo('password')">Change Password</button>
+    </div>
+    <div *ngIf="changePassword">
+        <input [(ngModel)]="password.old_password" placeholder="Enter Old Password"/>
+        <input [(ngModel)]="password.password" placeholder="Enter New Password"/>
+        <button (click)="updatePassword()">Modify</button>
+        
+    </div>
+</div> -->
+
+
+<div class="my_account_main">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="account_edit_inner">
+            <!-- <div class="heading_accout">
+              <h2>My Profile</h2>
+            </div> -->
+            <div *ngIf="userInfo" class="user_edit">
+              <div class="avtar">
+                <!-- <img *ngIf="!userInfo.image" src="assets/img/avatar.png" alt=""> -->
+                <img *ngIf="!userInfo.image" src="../../assets/img/money-bag.png" alt="">
+                <img *ngIf="userInfo.image" [src]="userInfo.image" alt="">
+                <input id="file" (change)="uploadFile($event)" [hidden]="true" type="file"> <i class="fa fa-pencil"></i>
+                <a style="cursor: pointer;" (click)="uploadFile($event)"><i class="fa fa-pencil"></i></a>
+              </div>
+              <div class="user_info">
+                <span *ngIf="userInfo" class="name">{{userInfo.username}}</span>
+                <button *ngIf="userInfo && !userInfo.is_superuser" class="change_pass" data-toggle="modal" data-target="#error_model_delete_user">Delete Account</button>
+              </div>
+            </div>
+            <div *ngIf="userInfo" class="profile_edit_form">
+              <div class="form-group">
+                <label class="sup_label">Username <span style="color: red;">* </span>
+                  <span class="help_icon"><i class="fa fa-question" aria-hidden="true"></i></span></label>
+                <input [(ngModel)]="userInfo.username" type="text" placeholder="Username" required />
+              </div>
+              <div class="form-group">
+                <label class="sup_label">First Name <span style="color: red;">* </span>
+                  <span class="help_icon"><i class="fa fa-question" aria-hidden="true"></i></span></label>
+                <input [(ngModel)]="userInfo.first_name" type="text" placeholder="First Name" required />
+              </div>
+              <div class="form-group">
+                <label class="sup_label">Last Name <span style="color: red;">* </span>
+                  <span class="help_icon"><i class="fa fa-question" aria-hidden="true"></i></span></label>
+                <input [(ngModel)]="userInfo.last_name" type="text" placeholder="Last Name">
+              </div>
+              <div class="form-group">
+                <label class="sup_label">E-mail <span style="color: red;">* </span>
+                  <span class="help_icon"><i class="fa fa-question" aria-hidden="true"></i></span></label>
+                <input [(ngModel)]="userInfo.email" type="email" placeholder="E-mail">
+              </div>
+              <strong style="color: #00389d;">My Watchlists Default View</strong>
+              <div class="d-flex mt-2" style="height: 28px;">
+                <div class="form-group">
+                  <label class="checkeBox_css">Tile</label>
+                  <input class="ml-2 radioBtn" type="radio" [(ngModel)]="userInfo.watchlist_view" value="tile" id="gridCheck">
+                </div>
+                <div class="form-group ml-3">
+                  <span class="checkeBox_css">List</span>
+                  <input class="ml-2 radioBtn2" type="radio"  [(ngModel)]="userInfo.watchlist_view" value="list" id="gridCheck1">
+                  
+                </div>
+              </div>
+              <button (click)="showPasswordBox()" class="change_pass">Change Password</button>
+              <div *ngIf="passwordFlag">
+                <div class="form-group">
+                  <label class="sup_label">Enter Previous Password</label>
+                   <input type="password" [(ngModel)]="password.old_password" placeholder="Enter Previous Password">
+                </div>
+                <div class="form-group">
+                  <label class="sup_label">Enter New Password</label>
+                  <input type="password" [(ngModel)]="password.password" placeholder="Enter New Password">
+                </div>
+              </div>
+              <div class="control_btns">
+                <button (click)="saveDetails()" class="btn-primary">Save Changes</button>
+                <button (click)="resetChanges()" class="btn-secondary">Cancel Changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+  <!-- Add this in all the pages -->
+  
+  <div class="message_btn_fx">
+    <button class="message_btn" type="button" data-toggle="modal" (click)="feedbackInput = '';" data-target="#message_bottom" (click)="gotoLoginPage()">
+      <img src="../../assets/img/asset.png">
+    </button>
+  </div>
+
+  <div class="modal fade add_queto_modal message_bottom" id="message_bottom" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md mob" role="document">
+      <div class="modal-content" *ngIf="login">
+        <div class="modal-header">
+        <h2>We’d love to hear from you as we continue to improve our product!</h2>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span><i class="fa fa-times" aria-hidden="true"></i></span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- <form> -->
+          <div class="form_inner">
+            <textarea [(ngModel)]="feedbackInput" class="form-control" placeholder="Please let us know your thoughts..."></textarea>
+          </div>
+            <div class="add_termactin">
+              <button type="button" data-dismiss="modal" [disabled]="!feedbackInput" aria-label="Close" (click)="saveFeedback()" class="btn btn-success">Submit</button>
+              <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-secondary">Cancel</button>
+            </div>
+          <!-- </form> -->
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- Error Modal -->
+<div class="modal fade error_msg" id="error_model_delete_user" tabindex="-1" role="dialog" aria-labelledby="error_model_delete_user" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <img src="assets/img/Error_Message_Pop-Up_Assets_2.gif" alt="">
+        <p>Are you sure you wish to permanently delete account?</p>
+        <div class="row text-center">
+          <div class="modal_btn_left">
+            <button type="button" class="btn btn-success" data-dismiss="modal" (click)="deleteProfile()">Yes</button>
+          </div>
+          <div class="modal_btn_right">
+            <button type="button" class="btn btn-success" data-dismiss="modal">No</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

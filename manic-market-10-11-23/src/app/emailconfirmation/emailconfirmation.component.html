@@ -1,0 +1,9 @@
+<div *ngIf="tokenvarifyed" class="email_confirm va_middel">
+    <h1>Congratulations! <i class="text-success fa fa-check-circle" aria-hidden="true"></i> </h1>
+    <p>Your email adress has been confirmed. </p>
+    <p>You can now login to your new Manic Market account.</p>
+    <button class="btn btn-warning" (click)="gotologin()">Login</button>
+</div>
+<div *ngIf="!tokenvarifyed"  class="email_confirm va_middel">
+    <h1>{{this.message}} </h1>
+</div>

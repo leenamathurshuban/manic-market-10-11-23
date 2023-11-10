@@ -1,0 +1,225 @@
+
+<div class="main_warper container dictionary_main">
+  <div class="row justify-content-center">
+    <div class="main-content col-md-12 my_watchlist_main">
+      <div class="page-content">
+        <div *ngIf="!isSuperUser" class="row">
+          <div class="col-md-6">
+            <h2 class="page-title">Finance dictionary</h2>
+          </div>
+          <div class="col-md-6">
+            <div class="search_quote finance" *ngIf='variable && !isContent'>
+              <i class="fa fa-search"></i>
+              <input type="text" [(ngModel)]="searchField" (keyup)="filterDictionary()" placeholder="Search Dictionary">
+              <button matSuffix mat-icon-button aria-label="Clear" (click)="clearSearchField()" *ngIf="searchField" class="clearbtn">
+                <mat-icon class="mat_icon_clear">close</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="isSuperUser && !commonService.adminDictonary" class="row">
+          <div class="col-md-6">
+            <h2 class="page-title">Finance dictionary</h2>
+          </div>
+          <div class="col-md-6">
+            <div class="search_quote finance" *ngIf='variable && !isContent'>
+              <i class="fa fa-search"></i>
+              <input type="text" [(ngModel)]="searchField" (keyup)="filterDictionary()" placeholder="Search Dictionary">
+              <button matSuffix mat-icon-button aria-label="Clear" (click)="clearSearchField()" *ngIf="searchField" class="clearbtn">
+                <mat-icon class="mat_icon_clear">close</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!--
+           <div *ngFor="let info of filteredUsers">
+          {{ info.title}}
+        </div> -->
+        <div *ngIf="isSuperUser && commonService.adminDictonary" class="row">
+          <div class="col-md-12 page-titlewarp">
+            <h2 class="page-title">Admin - Finance Dictionary Management</h2>
+            <button type="button" data-toggle="modal" data-target="#add_term" (click)="openPopup();clearInputs();" class="btn btn-info"><i class="fa fa-plus"></i></button>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="static-header col-md-12">
+            <div class="alphabetical_head">
+              <button class="btn {{alpha == undefined ? 'active' : '' }}" id=# (click)="filter($event, '#');" routerLink="/investor-dictionary"><i class="fa fa-bars" aria-hidden="true"></i></button>
+              <button (click)='showContent()' routerLink="/investor-dictionary/1" id=1 class="btn {{alpha == '1' ? 'active' : '' }}" (click)="filter($event, '1');">
+                #
+              </button>
+              <button id="A" class="btn  {{alpha == 'A' ? 'active' : '' }}" (click)="filter($event, 'A');" (click)='showContent()'>A</button>
+              <button id=B class="btn {{alpha == 'B' ? 'active' : '' }}" (click)="filter($event, 'B');" (click)='showContent()'>B</button>
+              <button id=C class="btn {{alpha == 'C' ? 'active' : '' }}" (click)="filter($event, 'C');" (click)='showContent()'>C</button>
+              <button id=D class="btn {{alpha == 'D' ? 'active' : '' }}" (click)="filter($event, 'D');" (click)='showContent()'>D</button>
+              <button id=E class="btn {{alpha == 'E' ? 'active' : '' }}" (click)="filter($event, 'E');" (click)='showContent()'>E</button>
+              <button id=F class="btn {{alpha == 'F' ? 'active' : '' }}" (click)="filter($event, 'F');" (click)='showContent()'>F</button>
+              <button id=G class="btn {{alpha == 'G' ? 'active' : '' }}" (click)="filter($event, 'G');" (click)='showContent()'>G</button>
+              <button id=H class="btn {{alpha == 'H' ? 'active' : '' }}" (click)="filter($event, 'H');" (click)='showContent()'>H</button>
+              <button id=I class="btn {{alpha == 'I' ? 'active' : '' }}" (click)="filter($event, 'I');" (click)='showContent()'>I</button>
+              <button id=J class="btn {{alpha == 'J' ? 'active' : '' }}" (click)="filter($event, 'J');" (click)='showContent()'>J</button>
+              <button id=K class="btn {{alpha == 'K' ? 'active' : '' }}" (click)="filter($event, 'K');" (click)='showContent()'>K</button>
+              <button id=L class="btn {{alpha == 'L' ? 'active' : '' }}" (click)="filter($event, 'L');" (click)='showContent()'>L</button>
+              <button id=M class="btn {{alpha == 'M' ? 'active' : '' }}" (click)="filter($event, 'M');" (click)='showContent()'>M</button>
+              <button id=N class="btn {{alpha == 'N' ? 'active' : '' }}" (click)="filter($event, 'N');" (click)='showContent()'>N</button>
+              <button id=O class="btn {{alpha == 'O' ? 'active' : '' }}" (click)="filter($event, 'O');" (click)='showContent()'>O</button>
+              <button id=P class="btn {{alpha == 'P' ? 'active' : '' }}" (click)="filter($event, 'P');" (click)='showContent()'>P</button>
+              <button id=Q class="btn {{alpha == 'Q' ? 'active' : '' }}" (click)="filter($event, 'Q');" (click)='showContent()'>Q</button>
+              <button id=R class="btn {{alpha == 'R' ? 'active' : '' }}" (click)="filter($event, 'R');" (click)='showContent()'>R</button>
+              <button id=S class="btn {{alpha == 'S' ? 'active' : '' }}" (click)="filter($event, 'S');" (click)='showContent()'>S</button>
+              <button id=T class="btn {{alpha == 'T' ? 'active' : '' }}" (click)="filter($event, 'T');" (click)='showContent()'>T</button>
+              <button id=U class="btn {{alpha == 'U' ? 'active' : '' }}" (click)="filter($event, 'U');" (click)='showContent()'>U</button>
+              <button id=V class="btn {{alpha == 'V' ? 'active' : '' }}" (click)="filter($event, 'V');" (click)='showContent()'>V</button>
+              <button id=W class="btn {{alpha == 'W' ? 'active' : '' }}" (click)="filter($event, 'W');" (click)='showContent()'>W</button>
+              <button id=X class="btn {{alpha == 'X' ? 'active' : '' }}" (click)="filter($event, 'X');" (click)='showContent()'>X</button>
+              <button id=Y class="btn {{alpha == 'Y' ? 'active' : '' }}" (click)="filter($event, 'Y');" (click)='showContent()'>Y</button>
+              <button id=Z class="btn {{alpha == 'Z' ? 'active' : '' }}" (click)="filter($event, 'Z');" (click)='showContent()'>Z</button>
+            </div>
+          </div>
+          <div *ngIf="isContent" class="col-md-12">
+            <div class="alphabetical_single_data">
+              <div (click)="gobacktolist()" class="margin-right">
+                <i class="fa fa-arrow-left" aria-hidden="true"></i>
+              </div>
+              <div>
+                <h3>{{selectedDicContent.title}}</h3>
+               <div *ngFor="let item of selectedDicContent.main_heading;" class="alpha_singdic">
+                  <strong class="itc_subtitle">{{item.title}}</strong>
+                  <p [innerHtml]='item.description'>{{item.description}}</p>
+               </div>
+              </div>
+            </div>
+          </div>
+          <div class="pad-btm">
+            <ng-container *ngIf="!isContent && !Object.keys(selectedAplha).length">
+              <div *ngFor="let alpha of Object.keys(contentObject)" class="col-md-12 alphabetical_data">
+                <strong attr.id="head{{alpha}}" class="alphabe_symbol ">{{ !+alpha ?  alpha : "#" }}</strong>
+                <div class="alphabet_datawarp">
+                  <ul *ngIf="isSuperUser && commonService.adminDictonary">
+                    <li *ngFor="let info of contentObject[alpha]"><a data-toggle="modal" href="javascript:void(0);" data-target="#add_term" class="pointer" (click)="checkForSlugs(info, alpha);openPopup()">{{info.title}}</a>
+                    </li>
+                  </ul>
+                  <ul *ngIf="isSuperUser && !commonService.adminDictonary">
+                    <li *ngFor="let info of contentObject[alpha]"><a class="pointer" href="javascript:void(0);" (click)="checkForSlugs(info, alpha)">{{info.title}}</a></li>
+                  </ul>
+                  <!-- # data get -->
+                  <ul *ngIf="!isSuperUser">
+                    <li *ngFor="let info of contentObject[alpha]">
+                      <a class="pointer" (click)="checkForSlugs(info, alpha)">{{info.title}}</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="Object.keys(selectedAplha).length && !isContent">
+              <div *ngFor="let alpha of Object.keys(selectedAplha)" class="col-md-12 alphabetical_data">
+                <strong attr.id="head{{alpha}}" class="alphabe_symbol">{{ !+alpha ?  alpha : "#" }}</strong>
+                <div class="alphabet_datawarp">
+                  <ul *ngIf="isSuperUser && commonService.adminDictonary">
+                    <li  *ngFor="let info of selectedAplha[alpha]"><a data-toggle="modal" href="javascript:void(0);" data-target="#add_term" class="pointer" (click)="checkForSlugs(info, alpha);openPopup()">{{info.title}}</a></li>
+                  </ul>
+                  <ul *ngIf="isSuperUser && !commonService.adminDictonary">
+                    <li *ngFor="let info of selectedAplha[alpha]"><a class="pointer" href="javascript:void(0);" (click)="checkForSlugs(info, alpha)">{{info.title}}</a></li>
+                  </ul>
+                  <!-- filter A B C click -->
+                  <ul *ngIf="!isSuperUser">
+                    <li *ngFor="let info of selectedAplha[alpha]"><a class="pointer" href="javascript:void(0);" (click)="checkForSlugs(info, alpha)">{{info.title}}</a></li>
+                  </ul>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FILTER POPUP -->
+<div *ngIf="popUpDrop" class="modal fade add_term_modal modal-pos" id="add_term" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-content content1">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span><i class="fa fa-times" aria-hidden="true"></i></span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- <form action="admin_investor_dictionary_submit" method="get" accept-charset="utf-8"> -->
+            <div class="row">
+              <div class="form-group col-md-12">
+                <input [(ngModel)]="title" type="text" name="" placeholder="h1" class="form-control">
+              </div>
+            </div>
+            <div *ngFor="let item of newDicArray; let i = index;" class="row" id="addpend_warp">
+              <div class="addpend_data w-100">
+                  <div class="form-group col-md-12">
+                  <input [(ngModel)]="item.title" type="text" name="" placeholder="h2" class="form-control">
+                </div>
+                <div class="form-group col-md-12">
+                  <ckeditor [(ngModel)]="item.description" name="" class="form-control" placeholder="Quote...."></ckeditor>
+                  <!-- <textarea [(ngModel)]="item.description" placeholder="h3" class="form-control"></textarea> -->
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 text-center">
+                <button (click)="addNewContent()" type="button" id="add_termbtn" class="btn btn-outline-info"><i class="fa fa-plus"></i></button>
+                <button (click)="removeContent()" type="button" id="remove_termbtn" class="btn btn-outline-info"><i class="fa fa-minus"></i></button>
+              </div>
+            </div>
+            <div class="add_termactin">
+              <button *ngIf="isSuperUser && !editingDic" [disabled]="!newDicArray.length" data-dismiss="modal" type="button" (click)="savingNewDicValue()" class="btn btn-success">Save</button>
+              <button *ngIf="isSuperUser && editingDic"  [disabled]="!newDicArray.length" data-dismiss="modal" type="button" (click)="editDictonary()" class="btn btn-success">Edit</button>
+                <button *ngIf="isSuperUser" class="close" data-dismiss="modal" aria-label="Close" (click)="deleteUser()" type="button" class="btn btn-secondary">Delete</button>
+            </div>
+          <!-- </form> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="message_btn_fx">
+  <button class="message_btn" type="button" data-toggle="modal" (click)="feedbackInput = '';" data-target="#message_bottom" (click)="gotoLoginPage()">
+    <img src="../../assets/img/asset.png">
+  </button>
+</div>
+
+<div class="modal fade add_queto_modal message_bottom" id="message_bottom" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-content" *ngIf="isLoggedIn">
+      <div class="modal-header">
+      <h2>We’d love to hear from you as we continue to improve our product!</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span><i class="fa fa-times" aria-hidden="true"></i></span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- <form> -->
+        <div class="form_inner">
+          <textarea [(ngModel)]="feedbackInput" class="form-control" placeholder="Please let us know your thoughts..."></textarea>
+        </div>
+          <div class="add_termactin">
+            <button type="button" data-dismiss="modal" [disabled]="!feedbackInput" aria-label="Close" (click)="saveFeedback()" class="btn btn-success">Submit</button>
+            <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-secondary">Cancel</button>
+          </div>
+        <!-- </form> -->
+      </div>
+    </div>
+    <!-- <div class="modal-content" *ngIf="!isLoggedIn">
+      <div class="modal-header">
+        <h2>You are not logged in . You must be first login. </h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span><i class="fa fa-times" aria-hidden="true"></i></span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="add_termactin">
+          <button type="button" data-dismiss="modal" aria-label="Close"
+          [routerLink]="['/login']" class="btn btn-success">Login</button>
+        </div>
+      </div>
+    </div> -->
+  </div>
+</div>

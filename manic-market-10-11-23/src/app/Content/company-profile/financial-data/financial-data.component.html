@@ -1,0 +1,85 @@
+<div class="table" [ngClass]="PreFix">
+    <!-- <thead> -->
+    <div class="responseFinacnetab responsivefin_head">
+        <div style="width: 24%;">&nbsp;</div>
+        <div style="width: 19%;" *ngIf="configModel.IsShowCol1"><strong class="
+            date_th">{{data?.Heading1}}</strong></div>
+        <div style="width: 19%;" *ngIf="configModel.IsShowCol2"><strong class="
+            date_th">{{data?.Heading2}}</strong></div>
+        <div style="width: 19%;" *ngIf="configModel.IsShowCol3"><strong class="
+            date_th">{{data?.Heading3}}</strong></div>
+        <div style="width: 19%;" *ngIf="configModel.IsShowCol4"><strong class="
+            date_th">{{data?.Heading4}}</strong></div>
+        <div style="width: 19%;" *ngIf="configModel.IsShowCol5"><strong class="
+            date_th">{{data?.Heading5}}</strong></div>
+    </div>
+    <!-- </thead> -->
+
+    <ng-container *ngFor="let item of data?.block_data; let i=index">
+        <ng-container *ngIf="item.children.length==0;else ChildLevelContent">
+
+            <div class="responseFinacnetab response_lavel1">
+                <div class="td_cell" style="width: 24%; font-weight:bold;">{{item?.name}}</div>
+                <div class="td_cell" style="width: 19%;" *ngIf="configModel.IsShowCol1">{{item?.Heading1 &&
+                    _commonService.checkIsValidNumberString(item?.Heading1) ? (item?.Heading1|number ):'-'}}
+                </div>
+                <div class="td_cell" style="width: 19%;" *ngIf="configModel.IsShowCol2">{{item?.Heading2 &&
+                    _commonService.checkIsValidNumberString(item?.Heading2)? (item?.Heading2|number):'-'}}
+                </div>
+                <div class="td_cell" style="width: 19%;" *ngIf="configModel.IsShowCol3">{{item?.Heading3 &&
+                    _commonService.checkIsValidNumberString(item?.Heading3)? (item?.Heading3 |number):'-'}}
+                </div>
+                <div class="td_cell" style="width: 19%;" *ngIf="configModel.IsShowCol4">{{item?.Heading4 &&
+                    _commonService.checkIsValidNumberString(item?.Heading4)? (item?.Heading4|number ):'-'}}
+                </div>
+                <div class="td_cell" style="width: 19%;" *ngIf="configModel.IsShowCol5">{{item?.Heading5 &&
+                    _commonService.checkIsValidNumberString(item?.Heading5)? (item?.Heading5 |number ):'-'}}
+                </div>
+            </div>
+
+        </ng-container>
+        <ng-template #ChildLevelContent>
+            <div class="responseFinacnetab">
+
+                <div style=" width: 100%;" attr.colspan="{{configModel.ColspanValue}}"
+                    class="ct_collapsetoggle response_lavel1" data-toggle="collapse">
+                    <div style="display:flex; width: 100%;">
+                        <div class="td_cell" style="width: 24%; font-weight:bold;"
+                            (click)="AddRemoveClass($event,'ct_collapse'+PreFix+'_tab_'+i)">
+                            <i class="fa fa-angle-down" aria-hidden="true"></i>
+                            {{item?.name}}
+                        </div>
+                        <div class="td_cell" style="width: 19%;" *ngIf="configModel.IsShowCol1">{{item?.Heading1 &&
+                            _commonService.checkIsValidNumberString(item?.Heading1)?
+                            (item?.Heading1 |number) :'-'}}</div>
+                        <div class="td_cell" style="width: 19%;" *ngIf="configModel.IsShowCol2">{{item?.Heading2 &&
+                            _commonService.checkIsValidNumberString(item?.Heading2)?
+                            (item?.Heading2 |number) :'-'}}</div>
+                        <div class="td_cell" style="width: 19%;" *ngIf="configModel.IsShowCol3">{{item?.Heading3 &&
+                            _commonService.checkIsValidNumberString(item?.Heading3)?
+                            (item?.Heading3 |number) :'-'}}</div>
+                        <div class="td_cell" style="width: 19%;" *ngIf="configModel.IsShowCol4">{{item?.Heading4 &&
+                            _commonService.checkIsValidNumberString(item?.Heading4)?
+                            (item?.Heading4 |number) :'-'}}</div>
+                        <div class="td_cell" style="width: 19%;" *ngIf="configModel.IsShowCol5">{{item?.Heading5 &&
+                            _commonService.checkIsValidNumberString(item?.Heading5)?
+                            (item?.Heading5 |number) :'-'}}</div>
+                    </div>
+
+
+
+                    <div class="ct_collapse collapse" id="ct_collapse{{PreFix+'_tab_'+i}}">
+
+                        <app-financial-level-data *ngFor="let child of item?.children ; let childIndex=index"
+                            [childData]="child" [PreFix]="PreFix+'_paraent_tab_'+i+'_child_tab_'+childIndex"
+                            [configModel]="configModel">
+                        </app-financial-level-data>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <app-financial-level-data  [childData]="item" [PreFix]="PreFix+'_tab_'+i" [configModel]="configModel">
+                </app-financial-level-data> -->
+        </ng-template>
+    </ng-container>
+</div>

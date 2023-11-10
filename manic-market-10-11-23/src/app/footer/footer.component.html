@@ -1,0 +1,71 @@
+<!-- <footer class="site-footer">
+    <ul>
+      <li><a href="javascript:void(0)">Privacy</a></li>
+      <li><a href="javascript:void(0)">Terms</a></li>
+      <li><a href="javascript:void(0)">Help</a></li>
+    </ul>
+  </footer> -->
+
+  <div class="m-footer lg_hedden">
+    <ul class="mf_nav">
+      <!-- <li (click)="gotoPage('home', 'tab1')" routerLink="home" id="tab1">
+        <a href="javascript:void(0);"><img src="../../assets/img/mf_home.png" class="mf_icon">Home</a>
+      </li> -->
+      <li *ngIf="this.login" (click)="gotoPage('side-bar', 'tab6')" id="tab6">
+        <a href="javascript:void(0);" id="my_profile"><img src="../../assets/img/mf_userprofile.png" class="mf_icon">Profile</a>
+      </li>
+      <li (click)="gotoPage('investor-dictionary', 'tab4')" routerLink="investor-dictionary" id="tab4">
+        <a href="javascript:void(0);"><img src="../../assets/img/mf_dictionary.png" class="mf_icon">dictionary</a>
+      </li>
+      <li (click)="gotoPage('quotes', 'tab5')" routerLink="quotes" id="tab5">
+        <a href="javascript:void(0);"><img src="../../assets/img/mf_quotes.png" class="mf_icon">Quotes</a>
+      </li>
+      <li (click)="gotoPage('screener', 'tab3')" routerLink="screener" id="tab3">
+        <a href="javascript:void(0);"><img src="../../assets/img/mf_screener.png" class="mf_icon">Screener</a>
+      </li>
+      <li (click)="gotoPage('mobilechat', 'tab1')" routerLink="mobilechat" id="tab1">
+        <a href="javascript:void(0);" ><img src="../../assets/img/mf_chat.png" class="mf_icon">Chat<span>({{ loginCount }})</span></a>
+      </li>
+      <li (click)="gotoPage('watchlist', 'tab2')" routerLink="watchlist" id="tab2">
+        <a href="javascript:void(0);"><img src="../../assets/img/mf_watchlist.png" class="mf_icon">Watchlists</a>
+      </li>
+      <!-- <li *ngIf="!this.login" (click)="gotoPage('login', 'tab6')" id="tab6">
+        <a href="javascript:void(0);" id="my_profile"><img src="../../assets/img/mf_userprofile.png" class="mf_icon">Login</a>
+      </li> -->
+    </ul>
+  </div>
+
+  <!-- <div id="xs-navbar1" class="xs-navbar">
+    <div *ngIf="_userDetail" class="xs_navheade">
+      <span class="close" (click)="closeMenu()">&times;</span>
+      <strong *ngIf="_userDetail" class="xs_username">{{_userDetail.username}}</strong>
+      <i *ngIf="!_userDetail.image" class="fa fa-user-o"></i>
+      <img class="Img" *ngIf="_userDetail.image" [src]="_commonService.profilePic" alt="">
+
+    </div>
+    <ul class="xs-navmenu">
+      <li (click)="gotoPageTab('profile')"><a href="javascript:void(0);">Profile</a></li>
+      <li (click)="gotoPageTab('watchlist')"><a href="javascript:void(0);">My watchlists</a></li>
+      <li (click)="gotoPageTab('screener')"><a href="javascript:void(0);">Screener</a></li>
+      <li *ngIf="isSuperUser" (click)="gotoPageTab('user-management')"><a href="javascript:void(0);">Admin-User Mgt</a></li>
+      <li *ngIf="isSuperUser" (click)="gotoPageTab('investor-dictionary')"><a href="javascript:void(0);">Admin-Dictionary</a></li>
+      <li *ngIf="isSuperUser" (click)="gotoPageTab('quotes')"><a href="javascript:void(0);">Admin-Quotes</a></li>
+      <li (click)="userLogout()"><a href="javascript:void(0);">Log out</a></li>
+    </ul>
+  </div> -->
+
+<button style="visibility: hidden;" id="openModalButton" [hidden]="true" data-toggle="modal" data-target="#error_model">Open Modal</button>
+
+<!-- Error Modal -->
+<div class="modal fade error_msg" id="error_model" tabindex="-1" role="dialog" aria-labelledby="error_model" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <img src='{{_commonService.popupType=="success" ? "assets/img/Money_bags_Pop-up_v4.gif" : "assets/img/Error_Message_Pop-Up_Assets_2.gif" }}' alt="">
+        <!-- <h4>{{_commonService.popupMessage}}</h4> -->
+        <p>{{_commonService.secondaryMessage}}</p>
+        <button type="button" class="btn btn-success" data-dismiss="modal">Ok</button>
+      </div>
+    </div>
+  </div>
+</div>

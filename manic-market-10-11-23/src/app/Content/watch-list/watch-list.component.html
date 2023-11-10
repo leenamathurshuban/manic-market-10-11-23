@@ -1,0 +1,652 @@
+<!-- Change Percentage Bar View ALL Page Strat -->
+<div class="container cp_info_first">
+    <div class="row">
+      <div class="col-md-9 cp_info">
+        <div class="cpinfo_head topheaddata_bar">
+          <ul>
+            <li class="item red" *ngFor="let item of changeFinance" [ngClass]="item.is_blue_bar ? 'borderbottom' : 'bordernone' && item.symbol == 'US05Y' ? 'symbol_none' : 'cp'">
+              <div *ngIf="item.symbol !== 'US05Y' && item.symbol !== 'US30Y'" >
+                <span class="copany_short">{{item.symbol}}</span>  
+                <span class="ml-2" [ngClass]="{'company_value': (item?.changePercent >  0), 'text-warning': (item?.changePercent <  0)}">{{item?.changePercent > 0? '': ''}}{{item?.changePercent > 0? '+': ''}}{{(item?.changePercent || item?.changePercent == 0) ? ((item?.changePercent) | number : '1.2-2' ): 'N/A'}}%</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- Change Percentage Bar View ALL Page End -->
+
+<div *ngIf="showNewsPopup" class="backdrop" (click)="close()"></div>
+<app-news *ngIf="showNewsPopup" class="newspopup">
+  <div class="top-row">
+    <button (click)="closeNews()" class="row-btn">
+      <span>&times;</span>
+    </button>
+  </div>
+  <div class="head-cont">
+    <div class="info-heading">{{selectedNews.source_name}} - {{selectedNews.date | date:'M.d.yy'}}</div>
+    <div class="news-heading">{{selectedNews.title}}</div>
+  </div>
+  <div class="descrp">{{selectedNews.text}}</div>
+  <div class="text-center" *ngIf="selectedNews?.symbol">
+    <a [href]="selectedNews.url" target="_blank" class="btn btn-primary">Continue to Full
+      Article</a>
+    <a [routerLink]="['/company-profile', selectedNews?.symbol]" class="btn btn-dark">See more news about
+      {{selectedNews?.symbol}}
+    </a>
+  </div>
+  <div class="nws_in_adss">
+  </div>
+</app-news>
+<div *ngIf="addwatchlistpopup" class="backdrop"></div>
+<app-news *ngIf="addwatchlistpopup" class="newwatch_pop">
+  <div>
+    <div class="modal_header">
+      <h2>New Watchlist</h2>
+      <button (click)="closewatchlist()" class="close">
+        <span>&times;</span>
+      </button>
+    </div>
+  </div>
+  <div class="form-group fancy_input">
+    <label>New Watchlist Name </label>
+    <input type="text" placeholder="Enter New Watchlist Name" [value]="newwatchlistname" class="form-control"
+      (keyup)="watchlistnamechange($event)">
+    <p class="error" *ngIf="newwatchlistnameerror">This field is required </p>
+  </div>
+  <div class="form-group">
+    <ng-select class="" (click)="clearValue()" bindLabel="name" placeholder="Enter company name or trading symbol"
+      [searchable]="true" [(ngModel)]="searchValuepop" (search)="searchValuepop=$event?.term;getSearchDatapopup()"
+       (change)="addnewsymbol($event)"  (clear)="onClear()" [clearable]="true">
+      <ng-container *ngIf="searchValuepop">
+        <ng-option (change)="addnewsymbol(item)" [value]="{value:item.value,id:item.id}"
+          *ngFor="let item of select2Model">
+          <img
+            [src]="item.changePercent > 0 ? '../../assets/img/market_up.png' : item.changePercent < 0 ? '../../assets/img/market_down.png' : '../../assets/img/no_dataupdate.png' ">
+          <a href="javascript:void(0)">
+            <strong>{{item.value}}</strong><small>{{item.label}}</small>
+          </a>
+        </ng-option>
+      </ng-container>
+      <!-- <ng-container *ngIf="!searchValue && trendingList.length > 0">
+        <ng-option disabled> <span class="tranding_text">Trending Today</span></ng-option>
+        <ng-container *ngFor="let item of trendingList">
+          <ng-option [value]="{value:item.value,id:item.id}" (change)="addnewsymbol(item)">
+            <img
+              [src]="item.changePercent > 0 ? '../../assets/img/market_up.png' : item.changePercent < 0 ? '../../assets/img/market_down.png' : '../../assets/img/no_dataupdate.png' ">
+              <a href="javascript:void(0)"> 
+                <strong>{{item.value}}</strong>
+            </a>
+          </ng-option>
+        </ng-container>
+      </ng-container> -->
+    </ng-select>
+    <p class="error" *ngIf="watchlistsymboliderror"> At least one selection is required</p>
+  </div>
+  <div class="new_wataglist">
+    <button class="btn_tag" *ngFor="let list of watchlistsymbol; let i = index">{{list.value}} <i
+        class="fa fa-times-circle" aria-hidden="true" (click)="removeSymbol(i)"></i></button>
+  </div>
+  <div class="model_footer">
+    <button type="button" data-dismiss="modal" aria-label="Close" (click)="savenewwatchlist()"
+      class="btn btn-primary">Save</button>
+    <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-light"
+      (click)="closewatchlist()">Cancel</button>
+  </div>
+</app-news>
+<div *ngIf="addSymbolpopup" class="backdrop"></div>
+<app-news *ngIf="addSymbolpopup" class="newwatch_pop">
+  <div>
+    <div class="modal_header">
+      <h2>Add New Symbol in {{this.Selectedwatchlistname}}</h2>
+      <button (click)="closeaddsymbol()" class="close">
+        <span>&times;</span>
+      </button>
+    </div>
+  </div>
+  <div class="form-group">
+    <ng-select class="" bindLabel="name" placeholder="Enter company name or trading symbol" [searchable]="true"
+      (search)="searchValue=$event?.term;getSearchData()"
+      (change)="isOpenSearchBar=false; addnewsymbol($event)">
+      <ng-option (change)="addnewsymbol(item)" [value]="{value:item.value,id:item.id}"
+        *ngFor="let item of select2Model">
+        {{item.label}}
+      </ng-option>
+    </ng-select>
+    <p class="error" *ngIf="watchlistsymboliderror"> At least one selection is required</p>
+  </div>
+  <div class="new_wataglist">
+    <button class="btn_tag" *ngFor="let list of watchlistsymbol; let i = index">{{list.value}} <i
+        class="fa fa-times-circle" aria-hidden="true" (click)="removeSymbol(i)"></i></button>
+  </div>
+  <div class="model_footer">
+    <button type="button" data-dismiss="modal" aria-label="Close" (click)="saveaddsymbolwatchlist()"
+      class="btn btn-success">Save</button>
+    <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-warning"
+      (click)="closeaddsymbol()">Cancel</button>
+  </div>
+</app-news>
+<div *ngIf="newsfilterpopup" class="backdrop"></div>
+<app-news *ngIf="newsfilterpopup" class="publispopup mw100 newwatch_pop">
+  <div class="jw-modal">
+    <div class="jw-modal-body">
+      <div class="modal_header">
+        <h2>Select Filters</h2>
+        <button (click)="closenewsfilter()" class="close">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="pubfl_serach">
+            <button type="button" class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
+            <input type="text" placeholder="Search Symbol...
+              "  class="form-control" [(ngModel)]="symbolSearch">
+          </div>
+          <div class="text-right">
+            <span class="reset_filbtn" (click)="resetfilter2(1)"><i class="fa fa-repeat" aria-hidden="true"></i> Reset Selection</span>
+          </div>
+          <div class="publrs_datawarp">
+            <ng-container *ngFor="let newsItem of this.WatchSocketdata | keyvalue | filter:symbolSearch; let i=index">
+              <div class="publrs_dataitem" *ngIf="newsItem?.value?.symbol?.search(this.search_symbol2) >= 0 && newsItem?.value?.symbol">
+                  <label class="switch">
+                    <input type="checkbox" (change)="filternews2($event,newsItem?.value?.symbol)"
+                      [checked]="Filterbysymbol2.indexOf(newsItem?.value?.symbol) >= 0"/>
+                    <span class="slider round"></span>
+                  </label>
+                  <span>
+                    {{newsItem?.value?.symbol}}
+                  </span>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="pubfl_serach">
+            <button type="button" class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
+            <input type="text" placeholder="Search Publisher..." class="form-control"
+            [(ngModel)]="publicSearch">
+          </div>
+          <div class="text-right">
+            <span class="reset_filbtn" (click)="resetfilter(1)"><i class="fa fa-repeat" aria-hidden="true"></i> Reset Selection</span>
+          </div>
+          <div class="publrs_datawarp">
+            <ng-container *ngFor="let newsItem of this.Publicerlist | filter:publicSearch">
+              <div class="publrs_dataitem" *ngIf="newsItem?.source_name?.search(this.search_symbol) >= 0 && newsItem?.source_name">
+                <label class="switch">
+                  <input type="checkbox" (change)="filternews($event,newsItem?.source_name)"
+                    [checked]="Filterbynews2.indexOf(newsItem?.source_name) >= 0"/>
+                  <span class="slider round"></span>
+                </label>
+                <span>
+                  {{newsItem?.source_name}}
+                </span>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <div class="model_footer">
+        <button type="button" data-dismiss="modal" aria-label="Close" (click)="applynewsfilters()"
+          class="btn btn-primary">Apply Filters</button>
+        <button type="button" data-dismiss="modal" aria-label="Close" (click)="closenewsfilter()"
+          class="btn btn-light">Cancel</button>
+      </div>
+    </div>
+  </div>
+</app-news>
+<div class="main_warper container">
+  <div class="row justify-content-center">
+    <div class="main-content col-md-12 my_watchlist_main">
+      <div class="page-content">
+        <div class="row">
+          <div class="col-md-3" (click)="outsideClick()">
+            <h2 class="page-title watchlist_heading">My Watchlists</h2>
+          </div>
+          <div class="col-md-9 wh_rightsec" (click)="outsideClick()">
+            <div class="watchlist_filter " data-toggle="modal"><i class="fa fa-plus-square" aria-hidden="true"
+                (click)="saveaddsymbolwatchname()"></i>
+              <ng-select class="" [(ngModel)]="searchValue" bindLabel="name" placeholder="Symbol" [searchable]="true"
+                (search)="searchValue=$event?.term;getSearchData()" 
+                (change)="setnewaddsymbol($event)" (clear)="onClear()">
+                <ng-container *ngIf="searchValue">
+                  <ng-option (change)="setnewaddsymbol(item)" [value]="{value:item.value,id:item.id}"
+                    *ngFor="let item of select2Model">
+                    <img
+                      [src]="item.changePercent > 0 ? '../../assets/img/market_up.png' : item.changePercent < 0 ? '../../assets/img/market_down.png' : '../../assets/img/no_dataupdate.png' ">
+                    <a href="javascript:void(0)">
+                      <strong>{{item.value}}</strong> <small> {{item.label}}</small>
+                    </a>
+                  </ng-option>
+                </ng-container>
+                <!-- <ng-container *ngIf="!searchValue && trendingList.length > 0">
+                  <ng-option disabled> <span class="tranding_text">Trending Today</span></ng-option>
+                  <ng-container *ngFor="let item of trendingList">
+                    <ng-option [value]="{value:item.value,id:item.id}" (change)="setnewaddsymbol(item)">
+                      <img
+                        [src]="item.changePercent > 0 ? '../../assets/img/market_up.png' : item.changePercent < 0 ? '../../assets/img/market_down.png' : '../../assets/img/no_dataupdate.png' ">
+                        <a href="javascript:void(0)"><strong>{{item.value}}</strong></a>
+                      
+                    </ng-option>
+                  </ng-container>
+                </ng-container> -->
+              </ng-select>
+              
+            </div>
+            <div>
+              <button (click)="watchlisttype('tile')"
+                [ngClass]="watchlistshowtype === 'tile' ? 'active list_gridbtn' : 'list_gridbtn' ">
+                <i class="fa fa-th-large" aria-hidden="true"></i>
+              </button>
+              <button (click)="watchlisttype('list')"
+                [ngClass]="watchlistshowtype === 'list' ? 'active list_gridbtn' : 'list_gridbtn' ">
+                <i class="fa fa-bars" aria-hidden="true"></i>
+              </button>
+            </div>
+            <div class="mobile_watchlist">
+              <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                <mat-icon>more_horiz</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item data-toggle="modal" data-target="#exampleModalCenter">
+                  <i class="fa fa-plus-square" aria-hidden="true"></i>
+                  <span class="ml-2">Add Symbol</span>
+                </button>
+                <button mat-menu-item (click)="openwatchlist()">
+                  <i class="fa fa-plus-square" aria-hidden="true"></i>
+                  <span class="ml-2">Add Watchlist</span>
+                </button>
+              </mat-menu>
+            </div>
+          </div>
+
+          <div class="col-md-12 watchList_tags">
+            <div cdkDropList (cdkDropListDropped)="drop($event)" type="button" cdkDropListOrientation="horizontal"
+              *ngIf="!editwatchlistname">
+              <button type="button" *ngFor="let list of watchlistname; let i = index"
+                (click)="cardClick(list.slug , list?.symbol)" (dblclick)='cardDoubleClick(i)'
+                [ngClass]="watchlistslug === list.slug ? 'selected_watchlist' : '' " cdkDrag>{{list.name}}</button>
+            </div>
+            <div *ngIf="editwatchlistname">
+              <div class="edit_wchtag_css" *ngFor="let list of watchlistname; let i = index">
+                <div type="button" (dblclick)='cardDoubleClick(i)' *ngIf="i == this.editlistbtnid" class="edit_wchtag">
+                  <i (click)="deleteWatchList(list.slug)" class="fa fa-times" aria-hidden="true"></i>
+                  <input [value]="list.name" autofocus (keydown.enter)='soubleClick()'
+                    (keyup)="watchlistnameedit($event, list.slug,i)" (focusout)="watchlistnameout($event, list.slug,i)"
+                    #nameit />
+                </div>
+                <div *ngIf="i !== this.editlistbtnid">
+                  <button type="button" (click)="cardClick(list.slug , list?.symbol)" (dblclick)='cardDoubleClick(i)'
+                    [ngClass]="watchlistslug === list.slug ? 'selected_watchlist' : '' " cdkDrag>{{list.name}}</button>
+                </div>
+              </div>
+            </div>
+            <button class="add_watchlist" (click)="openwatchlist()">
+              <i class="fa fa-plus-square-o" aria-hidden="true"></i>Add Watchlist
+            </button>
+          </div>
+        </div>
+        <div class="row mt-3" (click)="outsideClick()">
+          <div class="col-md-12 watchList_listbox">
+            <div class="row m-0 drag_boader" #dropListContainer cdkDropListGroup *ngIf="watchlistshowtype === 'tile'">
+              <div *ngFor="let item of this.testarray; let i = index;" class="col-md-4 watchList_box" cdkDropList
+                [cdkDropListData]="i" style="border-radius: 0 !important;background-color: #fff !important;"
+                id="{{'watchlistid'+i}}">
+                <div cdkDragBoundary=".drag_boader"
+                style="border-radius: 0 !important;background-color: #fff !important;" cdkDrag
+                [cdkDragStartDelay]="100" (mousedown)="dragStartDelay = 1" [cdkDragData]="i" (cdkDragEntered)="dragEntered($event)"
+                (cdkDragMoved)="dragMoved($event)" (cdkDragDropped)="dragDropped($event)" class="example-box">
+                  <div class="watch_moneyicon">
+                    <a href="javascript:void(0);">
+                      <img class="testing" *ngIf="WatchSocketdata[item]?.is_favourite"
+                        src="../../assets/img/money-bag.png" alt=""
+                        (click)="removewtachlist(WatchSocketdata[item]?.id)">
+                      <img class="testing" src="../../assets/img/money-bag_greay.png" alt=""
+                        *ngIf="!WatchSocketdata[item]?.is_favourite"
+                        (click)="addwtachlisttopfive(WatchSocketdata[item]?.id)">
+                      <i (click)="deleteWatchListItem(WatchSocketdata[item]?.id)" class="fa fa-times salim"
+                        aria-hidden="true"></i>
+                    </a>
+                  </div>
+                  <div
+                    [ngClass]="WatchSocketdata[item]?.changePercent >0 ? 'watch_top' : WatchSocketdata[item]?.changePercent == 0 ? 'watch_top not_change' : 'watch_top warning'">
+                    <span>
+                      <strong>
+                        <a style="cursor: pointer;text-decoration: none;" class="text-dark"
+                          [routerLink]="['/company-profile', WatchSocketdata[item]?.symbol]">
+                          {{ WatchSocketdata[item]?.symbol ? WatchSocketdata[item]?.symbol:'N/A'}}
+                        </a>
+                      </strong>
+                      <a style="cursor: pointer;text-decoration: none;" class="text-dark xs-hide"
+                        [routerLink]="['/company-profile', WatchSocketdata[item]?.symbol]">
+                        {{ WatchSocketdata[item]?.companyName? WatchSocketdata[item]?.companyName:'N/A'}}
+                      </a>
+                    </span>
+                    
+                    <!-- Post Market ul Start -->
+                    <ul class="pm_cpinfo pre_postlist" *ngIf="WatchSocketdata2[item]?.post_market_open == true">
+                      <li class="mobile_none" [ngClass]="{'text-success': (WatchSocketdata[item]?.postMarketChangePercent >  0), 'text-warning': (WatchSocketdata[item]?.postMarketChangePercent <  0)}">
+                        <!-- {{WatchSocketdata[item]?.postMarketChangePercent? '+'+ (WatchSocketdata[item]?.postMarketChangePercent | number : '.2-2')+'%':''}}  -->
+                        {{WatchSocketdata[item]?.postMarketChangePercent > 0 ? '+' : '' }}{{(WatchSocketdata[item]?.postMarketChangePercent ||
+                          WatchSocketdata[item]?.postMarketChangePercent == 0) ? ((WatchSocketdata[item]?.postMarketChangePercent) |
+                          number:'.2-2')+'%':"N/A" }}
+                      </li>
+                      <li [ngClass]="{'text-success': (WatchSocketdata[item]?.postMarketChange >  0), 'text-warning': (WatchSocketdata[item]?.postMarketChange <  0)}">
+                          {{WatchSocketdata[item]?.postMarketChange > 0 ? '$' : '$' }}{{(WatchSocketdata[item]?.postMarketChange ||
+                            WatchSocketdata[item]?.postMarketChange == 0) ? ((WatchSocketdata[item]?.postMarketChange) |
+                            number : '.2-2' ):"N/A" }} 
+                      </li>
+                      <li class="mobile_none">
+                        <!-- <small>Post-Market</small> -->
+                        <span class="tol_value">
+                          {{WatchSocketdata[item]?.postMarketPrice?
+                            "$"+ (WatchSocketdata[item]?.postMarketPrice | number : '.2-2'):'N/A'}}</span>
+                      </li>
+                    </ul>
+                    <!-- Post Market ul End -->
+
+                    <!-- Pre Market ul Start -->
+                    <ul class="pm_cpinfo pre_postlist"  *ngIf="WatchSocketdata2[item]?.pre_market_open == true">
+                      <li class="mobile_none" [ngClass]="{'text-success': (WatchSocketdata[item]?.preMarketChangePercent >  0), 'text-warning': (WatchSocketdata[item]?.preMarketChangePercent <  0)}">
+                        <!-- {{WatchSocketdata[item]?.preMarketChangePercent?
+                          '+'+ (WatchSocketdata[item]?.preMarketChangePercent | number : '.2-2')+'%':''}} -->
+                          {{WatchSocketdata[item]?.preMarketChangePercent > 0 ? '+' : '' }}{{(WatchSocketdata[item]?.preMarketChangePercent ||
+                            WatchSocketdata[item]?.preMarketChangePercent == 0) ? ((WatchSocketdata[item]?.preMarketChangePercent) |
+                            number:'.2-2')+'%':"N/A" }}
+                      </li>
+                      <li [ngClass]="{'text-success': (WatchSocketdata[item]?.preMarketChange >  0), 'text-warning': (WatchSocketdata[item]?.preMarketChange <  0)}">
+                          {{WatchSocketdata[item]?.preMarketChange > 0 ? '$' : '$' }}{{(WatchSocketdata[item]?.preMarketChange ||
+                            WatchSocketdata[item]?.preMarketChange == 0) ? ((WatchSocketdata[item]?.preMarketChange) |
+                            number : '.2-2' ):"N/A" }}
+                      </li>
+                      <li class="mobile_none">
+                        <!-- <small>Pre-Market</small> -->
+                        <span class="tol_value">
+                            {{WatchSocketdata[item]?.preMarketPrice?
+                              "$"+ (WatchSocketdata[item]?.preMarketPrice | number : '.2-2'):''}}</span>
+                      </li>
+                    </ul>
+                    <!-- Pre Market ul End -->
+                  </div>
+                  <div class="watch_vol">
+                    <p>
+                      <span><span class="mobile_none">Vol:</span> {{WatchSocketdata[item]?.latestVolume ?
+                        (WatchSocketdata[item]?.latestVolume | AmountFormat: 2):"N/A" }}</span>
+                        <span class="space_arrow">|</span>
+                      <span>
+                        <span class="mobile_none">Avg:</span> {{WatchSocketdata[item]?.avgTotalVolume ?
+                        ( WatchSocketdata[item]?.avgTotalVolume | AmountFormat: 2):"N/A" }}</span>
+                    </p>
+                    <div class="mcpt">
+                      <span class="mc_text">MC: {{WatchSocketdata[item]?.marketCap
+                        ?(WatchSocketdata[item]?.marketCap|AmountFormat: 2):'N/A'}} |
+                        P/E: {{WatchSocketdata[item]?.peRatio?WatchSocketdata[item]?.peRatio:'N/A'}}
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    [ngClass]="WatchSocketdata[item]?.changePercent > 0 ? 'pricing_wachlist' : WatchSocketdata[item]?.changePercent == 0 ? 'pricing_wachlist not_change' : 'pricing_wachlist warning'">
+                    <h2>
+                      {{WatchSocketdata[item]?.changePercent > 0 ? '+' : '' }}{{(WatchSocketdata[item]?.changePercent ||
+                      WatchSocketdata[item]?.changePercent == 0) ? ((WatchSocketdata[item]?.changePercent * 100) |
+                      number:'1.2-2')+'%':"N/A" }}
+                      <!-- {{WatchSocketdata[item]?.changePercent > 0 ? '+' : '' }}{{(WatchSocketdata[item]?.changePercent ||
+                        WatchSocketdata[item]?.changePercent == 0) ? ((WatchSocketdata[item]?.changePercent * 100) |
+                        number:'1.2-2')+'%':"N/A" }} -->
+                      <div class="chng_num">
+                        <span>{{WatchSocketdata[item]?.change > 0 ? '+' : ''
+                        }}{{WatchSocketdata[item]?.change ? (WatchSocketdata[item]?.change | number : '1.2-2'):"N/A"
+                        }}</span>
+                        <h4>${{WatchSocketdata[item]?.latestPrice ?
+                          ( WatchSocketdata[item]?.latestPrice | number : '.2-2'):"N/A" }}</h4>
+                      </div>
+                    </h2>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="table-responsive" [ngStyle]="watchlistshowtype != 'list' && {'display': 'none'}">
+              <table id="watchList" class="table watchlisttable" style="width:100%" #data datatable
+                [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+                <thead>
+                  <tr>
+                    <th>Symbol</th>
+                    <th>% Change</th>
+                    <th>Change</th>
+                    <th>Price</th>
+                    <th class="wch_vol">Volume</th>
+                    <th class="wch_avgvol text-right">Avg. Volume</th>
+                    <th class="th_rang">52W Range</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of this.testarray ; let i = index;">
+                    <td class="table_symbol">
+                      <a style="cursor: pointer;text-decoration: none;" class="text-dark"
+                        [routerLink]="['/company-profile', WatchSocketdata[item]?.symbol]">
+                        <strong class="d-block"><span style="display: none;">({{i}})</span>
+                          {{WatchSocketdata[item]?.symbol ? WatchSocketdata[item]?.symbol:'N/A'}}
+                        </strong>
+                        <small>{{WatchSocketdata[item]?.companyName ? WatchSocketdata[item]?.companyName:'N/A'}}
+                        </small>
+                      </a>
+                    </td>
+                    
+                    <td>
+                      <span
+                        [ngClass]="{'text-success': WatchSocketdata[item]?.changePercent>=0, 'text-warning': WatchSocketdata[item]?.changePercent<0 }">
+                        {{WatchSocketdata[item]?.changePercent > 0 ? '+' : ''
+                        }}{{(WatchSocketdata[item]?.changePercent
+                        || WatchSocketdata[item]?.changePercent == 0)
+                        ?
+                        ((WatchSocketdata[item]?.changePercent *100) | number : '1.2-2' )+'%':"N/A" }}
+                      </span>
+                    </td>
+                    <td><span
+                        [ngClass]="{'text-success': WatchSocketdata[item]?.change>=0, 'text-warning': WatchSocketdata[item]?.change<0 }">{{WatchSocketdata[item]?.change
+                        ?
+                        '$'+ ( WatchSocketdata[item]?.change| number : '.2-2'):"N/A" }}</span>
+                    </td>
+                    <td><strong>{{WatchSocketdata[item]?.latestPrice ?
+                      '$'+ ( WatchSocketdata[item]?.latestPrice | number : '.2-2'):"N/A" }}</strong></td>
+                    <td class="postion_rel">
+                      <strong class="text-info">{{WatchSocketdata[item]?.latestVolume ?
+                        (WatchSocketdata[item]?.latestVolume | AmountFormat: 2):"N/A" }}</strong>
+                      <div class="progress vol_progress">
+                        <div class="progress-bar" role="progressbar"
+                          [ngStyle]="{'width': (WatchSocketdata[item]?.latestVolume / WatchSocketdata[item]?.avgTotalVolume * 100) +'%'}"
+                          [attr.aria-valuenow]="(WatchSocketdata[item]?.latestVolume / WatchSocketdata[item]?.avgTotalVolume * 100)"
+                          aria-valuemin="0" aria-valuemax="200">
+                        </div>
+                      </div>
+                    </td>
+                    <td align="right" class="postion_rel">
+                      <strong>{{WatchSocketdata[item]?.avgTotalVolume ?
+                        ( WatchSocketdata[item]?.avgTotalVolume | AmountFormat: 2):"N/A" }}</strong>
+                    </td>
+                    <td>
+                      <div class="drang_count">
+                        <strong>{{WatchSocketdata[item]?.week52high ?
+                          ( WatchSocketdata[item]?.week52high < WatchSocketdata[item]?.week52low ?
+                            WatchSocketdata[item]?.week52high : WatchSocketdata[item]?.week52low) :"N/A" }} </strong>
+                            <strong>{{WatchSocketdata[item]?.week52low ? ( WatchSocketdata[item]?.week52high > WatchSocketdata[item]?.week52low ? WatchSocketdata[item]?.week52high : WatchSocketdata[item]?.week52low) :"N/A" }}</strong>
+                      </div>
+                      <div class="rangslider-warp">
+                        <input type="range" min="0" max="100" disabled
+                          [value]="(WatchSocketdata[item]?.week52low / WatchSocketdata[item]?.week52high * 100) "
+                          class="slider" id="myRange">
+                      </div>
+                    </td>
+                   
+                    <td class="watchlist_action">
+                      <button *ngIf="!WatchSocketdata[item]?.is_favourite" type="button" title="Add watchlist top 5"
+                        (click)="addwtachlisttopfive(WatchSocketdata[item]?.id)">
+                        <img class="testing" src="../../assets/img/money-bag_greay.png" alt="">
+                      </button>
+                      <button *ngIf="WatchSocketdata[item]?.is_favourite" class="active" type="button"
+                        title="Add watchlist top 5" (click)="removewtachlist(WatchSocketdata[item]?.id)">
+                        <img class="testing" src="../../assets/img/money-bag.png" alt="">
+                      </button>
+                      <button class="btnicon_del" type="button" title="Remove from watch list"
+                        (click)="deleteWatchListItem(WatchSocketdata[item]?.id)"><i class="fa fa-times"
+                          aria-hidden="true"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="row news_subhead mt-3">
+          <div class="col-md-2 mt-1">
+            <h3>Latest News</h3>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group news_seraching">
+              <button type="button" class="sr_btn"><i class="fa fa-search"></i></button>
+              <input type="text" class="form-control" [(ngModel)]="SearchNews"
+                (keyup.enter)="searchNewsFilter($event.target.value)" placeholder="Search Latest News">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="datepicker btn-icon btn" mat-raised-button (click)="picker.open()">
+              <img src="assets/img/SVG/datepicker_icon.svg" class="svg_icon" alt="">
+              <input #toInput matInput [matDatepicker]="picker" readonly hidden (dateChange)="datechange($event)"
+                [ngStyle]="{'width': datefilter ? '75px' : '0px'}">
+              <mat-datepicker #picker></mat-datepicker>
+            </div>
+            <a class="btn btn-icon" href="javascript:void(0);" (click)="opennewsfilter()">
+              <img src="assets/img/SVG/filter_icon.svg" class="svg_icon" alt=""><!-- {{ filterapplyed ? " Edit Publisher filters ":" Filter
+              Publisher by "}} -->
+            </a>
+          </div>
+        </div>
+        <div class="row latest_news" (click)="outsideClick()">
+          <!-- <div class="col-md-12">
+            <h3 class="sub-title">Latest news </h3>
+            <a class="btn btn-outline-info mb-2" (click)="opennewsfilter()" href="javascript:void(0)"><i class="fa fa-filter"></i>{{ filterapplyed ? "
+              Edit Latest news filters >>
+              ":" Filter Latest news by"}}</a>
+          </div> -->
+          <div class="col-md-12 pt-3">
+            <ul>
+              <li *ngFor="let newsItem of watchlistnews; let i=index">
+                <small class="news_date xs-hide">{{(i==0) || (watchlistnews[i-1]?.date?.replace('
+                  00:00:00','')!=newsItem?.date?.replace(' 00:00:00',''))?
+                  filterDate(newsItem?.date?.replace(' 00:00:00',''),false):""}}</small>
+                <small class="news_date lg-hide">{{filterDate(newsItem?.date?.replace(' 00:00:00',''),true)}}</small>
+                <small class="news_time">
+                  {{newsItem?.time?.replace('1900-01-01',"").substring(0,newsItem?.time?.replace('1900-01-01',"").length - 3)}}
+                </small>
+                <small class="comp_logo lg-hide">{{newsItem?.source_name}} </small>
+                <p class="news_dicription">
+                  <strong class="xs-hide">{{newsItem?.symbol?newsItem?.symbol :'N/A'}}</strong>
+                  <a class="color" href="javascript:void(0)" (click)="gotoNews(newsItem)">{{newsItem?.title}}</a>
+                  <small class="comp_logo xs-hide">{{newsItem?.source_name}}</small>
+                </p>
+              </li>
+            </ul>
+            <div *ngIf="this.watchlistnews.length == 0" class="datanotfound">
+              <span>News not available</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="message_btn_fx">
+  <button class="message_btn" type="button" data-toggle="modal" (click)="feedbackInput = '';"
+    data-target="#message_bottom" (click)="gotoLoginPage()">
+    <img src="../../assets/img/asset.png">
+  </button>
+</div>
+<div class="modal fade add_queto_modal message_bottom" id="message_bottom" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md mob" role="document">
+    <div class="modal-content" *ngIf="isLoggedIn">
+      <div class="modal-header">
+        <h2>We’d love to hear from you as we continue to improve our product!</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span><i class="fa fa-times" aria-hidden="true"></i></span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form_inner">
+          <textarea [(ngModel)]="feedbackInput" class="form-control"
+            placeholder="Please let us know your thoughts..."></textarea>
+        </div>
+        <div class="add_termactin">
+          <button type="button" data-dismiss="modal" [disabled]="!feedbackInput" aria-label="Close"
+            (click)="saveFeedback()" class="btn btn-success">Submit</button>
+          <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-secondary">Cancel</button>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="modal-content" *ngIf="!isLoggedIn">
+      <div class="modal-header">
+        <h2>You are not logged in . You must be first login.</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span>
+            <i class="fa fa-times" aria-hidden="true"></i>
+          </span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="add_termactin">
+          <button type="button" data-dismiss="modal" aria-label="Close" [routerLink]="['/login']"
+            class="btn btn-success">Login</button>
+        </div>
+      </div>
+    </div> -->
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered watchlist_add_symbol" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="exampleModalLongTitle">Add Symbol</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="watchlist_filter mobile_watclist_filter" data-toggle="modal"><i class="fa fa-plus-square" aria-hidden="true"
+          (click)="saveaddsymbolwatchname()"></i>
+        <ng-select class="" [(ngModel)]="searchValue" bindLabel="name" placeholder="Symbol" [searchable]="true"
+          (search)="searchValue=$event?.term;getSearchData()" 
+          (change)="setnewaddsymbol($event)" (clear)="onClear()">
+          <ng-container *ngIf="searchValue">
+            <ng-option (change)="setnewaddsymbol(item)" [value]="{value:item.value,id:item.id}"
+              *ngFor="let item of select2Model">
+              <img
+                [src]="item.changePercent > 0 ? '../../assets/img/market_up.png' : item.changePercent < 0 ? '../../assets/img/market_down.png' : '../../assets/img/no_dataupdate.png' ">
+              <a href="javascript:void(0)">
+                <strong>{{item.value}}</strong> <small> {{item.label}}</small>
+              </a>
+            </ng-option>
+          </ng-container>
+          <!-- <ng-container *ngIf="!searchValue && trendingList.length > 0">
+            <ng-option disabled> <span class="tranding_text">Trending Today</span></ng-option>
+            <ng-container *ngFor="let item of trendingList">
+              <ng-option [value]="{value:item.value,id:item.id}" (change)="setnewaddsymbol(item)">
+                <img
+                  [src]="item.changePercent > 0 ? '../../assets/img/market_up.png' : item.changePercent < 0 ? '../../assets/img/market_down.png' : '../../assets/img/no_dataupdate.png' ">
+                  <a href="javascript:void(0)"><strong>{{item.value}}</strong></a>
+              </ng-option>
+            </ng-container>
+          </ng-container> -->
+        </ng-select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

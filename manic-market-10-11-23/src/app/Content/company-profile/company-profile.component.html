@@ -1,0 +1,1976 @@
+<!-- Change Percentage Bar View ALL Page Strat -->
+<div class="container cp_info_first">
+  <div class="row">
+    <div class="col-md-9 cp_info">
+      <div class="cpinfo_head topheaddata_bar">
+        <ul>
+          <li class="item red" *ngFor="let item of changeFinance" [ngClass]="item.is_blue_bar ? 'borderbottom' : 'bordernone' && item.symbol == 'US05Y' ? 'symbol_none' : 'cp'">
+            <div *ngIf="item.symbol !== 'US05Y' && item.symbol !== 'US30Y'" >
+              <span class="copany_short">{{item.symbol}}</span>  
+              <span class="ml-2" [ngClass]="{'company_value': (item?.changePercent >  0), 'text-warning': (item?.changePercent <  0)}">{{item?.changePercent > 0? '': ''}}{{item?.changePercent > 0? '+': ''}}{{(item?.changePercent || item?.changePercent == 0) ? ((item?.changePercent) | number : '1.2-2' ): 'N/A'}}%</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Change Percentage Bar View ALL Page End -->
+
+<div *ngIf="showNewsPopup" class="backdrop"></div>
+<app-news *ngIf="showNewsPopup" class="newspopup">
+  <div class="top-row">
+    <button (click)="closeNews()" class="row-btn">
+      <span>&times;</span>
+    </button>
+  </div> 
+  <div class="head-cont">
+    <div class="info-heading">{{selectedNews.source_name}} - {{selectedNews.date | date:'d/M/yy'}}</div>
+    <div class="news-heading">{{selectedNews.title}}</div>
+  </div>
+  <div class="descrp">{{selectedNews.text}}</div>
+  <div class="text-center">
+    <a [href]="selectedNews.url" target="_blank" class="btn btn-primary">Continue to Full
+      Article</a>
+    <a class="btn btn-dark" (click)="closeNews()" [routerLink]="['/company-profile', selectedNews?.symbol]">See more
+      news about {{symbol}}
+    </a>
+  </div>
+  <div class="nws_in_adss">
+  </div>
+</app-news>
+
+<div *ngIf="newsfilterpopup" class="backdrop"></div>
+<app-news *ngIf="newsfilterpopup" class="publispopup newwatch_pop com_profilenews">
+  <div class="jw-modal">
+    <div class="jw-modal-body">
+      <div class="modal_header">
+        <h2>Select Publishers</h2>
+        <button (click)="closenewsfilter()" class="close">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="pubfl_serach">
+        <button type="button" class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
+        <input type="text" placeholder="Search Publisher" [(ngModel)]="searchText" class="form-control">
+      </div>
+      <div class="text-right"> <span class="reset_filbtn" (click)="resetfilter(1)"><i class="fa fa-repeat"
+            aria-hidden="true"></i> Reset Selection</span></div>
+      <div class="publrs_datawarp">
+        <ng-container *ngFor="let newsItem of this.Publicerlist | filter:searchText">
+          <div class="publrs_dataitem"
+            *ngIf="newsItem?.source_name?.search(this.search_symbol) >= 0 && newsItem?.source_name">
+            <label class="switch">
+              <input type="checkbox" (change)="filternews($event,newsItem?.source_name)"
+                [checked]="Filterbynews.indexOf(newsItem?.source_name) >= 0" />
+              <span class="slider round"></span>
+            </label>
+            <span>
+              {{newsItem?.source_name}}
+            </span>
+          </div>
+        </ng-container>
+      </div>
+      <div class="model_footer">
+        <button type="button" data-dismiss="modal" aria-label="Close" (click)="applynewsfilters()"
+          class="btn btn-primary">Apply Filters</button>
+        <button type="button" data-dismiss="modal" aria-label="Close" (click)="closenewsfilter()"
+          class="btn btn-light">Cancel</button>
+      </div>
+      <!-- <button type="button" data-dismiss="modal" aria-label="Close" (click)="applynewsfilters()"
+        class="btn btn-success">Apply Filters</button> -->
+    </div>
+  </div>
+</app-news>
+
+<div class="main_warper container" [ngClass]="SymbolSocketdata !== null ? 'available': 'notavailable'">
+  <div class="row justify-content-center">
+    <div class="main-content col-md-12">
+      <div class="page-content">
+        <div class="row">
+          <div class="col-md-8 cp_info">
+            <div class="cpinfo_head">
+              <div [ngClass]="this.SymbolSocketdata?.changePercent >0 ? 'cp_name clearfix' : this.SymbolSocketdata?.changePercent < 0 ? 'clearfix cp_name cp_down' : 'clearfix cp_name cp_defult' ">
+                <h1><small *ngIf="this.News_data.length == 0" style="position: relative;bottom: 6px;">^</small>{{this.SymbolSocketdata?.symbol ?this.SymbolSocketdata?.symbol:'N/A'}}</h1>
+                <span>{{this.SymbolSocketdata?.companyName?this.SymbolSocketdata?.companyName:'N/A'}}</span>
+                <!-- <strong *ngIf="this.model?.website"><a (click)="redirectToExternalUrl(this.model?.website)"
+                    href="javascript:void(0);">{{formatUrl(this.model?.website)}}</a></strong> -->
+                    
+                <!-- Post Market ul Start -->
+                <ul class="pm_cpinfo pre_posttext" *ngIf="SymbolSocketdata2?.post_market_open == true">
+                  <li [ngClass]="{'text-success': (SymbolSocketdata?.postMarketChangePercent >  0), 'text-warning': (SymbolSocketdata?.postMarketChangePercent <  0)}">
+                    <!-- {{SymbolSocketdata?.postMarketChangePercent>0?
+                      '+'+ (SymbolSocketdata?.postMarketChangePercent | number : '.2-2')+'%':'N/A'}} -->
+                      {{SymbolSocketdata?.postMarketChangePercent > 0 ? '+' : '' }}{{(SymbolSocketdata?.postMarketChangePercent ||
+                        SymbolSocketdata?.postMarketChangePercent == 0) ? ((SymbolSocketdata?.postMarketChangePercent) |
+                        number:'.2-2')+'%':"N/A" }}
+                  </li>
+                  <li [ngClass]="{'text-success': (SymbolSocketdata?.postMarketChange >  0), 'text-warning': (SymbolSocketdata?.postMarketChange <  0)}">
+                    {{SymbolSocketdata?.postMarketChange > 0 ? '$' : '$' }}{{(SymbolSocketdata?.postMarketChange ||
+                      SymbolSocketdata?.postMarketChange == 0) ? ((SymbolSocketdata?.postMarketChange) |
+                      number : '.2-2' ):"N/A" }} 
+                  </li>
+                  <li>
+                    <small>Post-Market</small>
+                    <p>
+                      {{SymbolSocketdata?.postMarketPrice? "$"+ (SymbolSocketdata?.postMarketPrice | number : '.2-2'):'N/A'}}</p>
+                  </li>
+                </ul>
+                <!-- Post Market ul End -->
+
+                <!-- Pre Market ul Start -->
+                <ul class="pm_cpinfo pre_posttext" *ngIf="SymbolSocketdata2?.pre_market_open == true">
+                  <li [ngClass]="{'text-success': (SymbolSocketdata?.preMarketChangePercent >  0), 'text-warning': (SymbolSocketdata?.preMarketChangePercent <  0)}">
+                    <!-- {{SymbolSocketdata?.preMarketChangePercent>0? '+'+ (SymbolSocketdata?.preMarketChangePercent | number : '.2-2')+'%':'N/A'}} -->
+                    {{SymbolSocketdata?.preMarketChangePercent > 0 ? '+' : '' }}{{(SymbolSocketdata?.preMarketChangePercent ||
+                      SymbolSocketdata?.preMarketChangePercent == 0) ? ((SymbolSocketdata?.preMarketChangePercent) |
+                      number:'.2-2')+'%':"N/A" }}
+                  </li>
+                  <li [ngClass]="{'text-success': (SymbolSocketdata?.preMarketChange >  0), 'text-warning': (SymbolSocketdata?.preMarketChange <  0)}">
+                    {{SymbolSocketdata?.preMarketChange > 0 ? '$' : '$' }}{{(SymbolSocketdata?.preMarketChange ||
+                      SymbolSocketdata?.preMarketChange == 0) ? ((SymbolSocketdata?.preMarketChange) |
+                      number : '.2-2' ):"N/A" }}
+                  </li>
+                  <li>
+                    <small>Pre-Market</small>
+                    <p>{{SymbolSocketdata?.preMarketPrice? "$"+ (SymbolSocketdata?.preMarketPrice | number : '.2-2'):'N/A'}}</p>
+                  </li>
+                </ul>
+                <!-- Pre Market ul End -->
+              </div>
+            </div>
+            <div class="cp_foot">
+              <div class="cp_leftpanel text-left">
+                <strong>Vol: {{this.SymbolSocketdata?.latestVolume
+                  ?(this.SymbolSocketdata?.latestVolume|AmountFormat: 2):'N/A'}} </strong>
+               <span class="space_arrow"><strong>|</strong> </span> 
+                <strong>Avg: {{this.SymbolSocketdata?.avgTotalVolume
+                  ?(this.SymbolSocketdata?.avgTotalVolume|AmountFormat: 2):'N/A'}} </strong>
+                <h2
+                  [ngClass]="{'text-success animate__bounceInDown': this.SymbolSocketdata?.changePercent>0, 'text-warning': this.SymbolSocketdata?.changePercent<0 ,'text-dark': this.SymbolSocketdata?.changePercent==0}">
+                  <!-- <i [ngClass]="{'fa-caret-up': this.SymbolSocketdata?.changePercent>=0, 'fa-caret-down': this.SymbolSocketdata?.changePercent<0 }"
+                    class="fa" aria-hidden="true"></i> -->
+                  {{(this.SymbolSocketdata?.changePercent || this.SymbolSocketdata?.changePercent == 0) ?
+                  ( this.SymbolSocketdata?.changePercent>0 ? '+' + ((this.SymbolSocketdata?.changePercent * 100)|
+                  number : '1.2-2' ) : ( this.SymbolSocketdata?.changePercent * 100) | number : '1.2-2' )+'%':'N/A' }}
+                </h2>
+                <div class="watch_btnpanel">
+                  <div class="add_watltbtn" *ngIf="model?.symbol_id">
+                    <button type="button" class="btn btn-outline-success" (click)="AddWatchListItem()">
+                      <i class="fa fa-plus-square pr-2" aria-hidden="true"></i>
+                    </button>
+                    <ul class="watchlistname_list" *ngIf="watchlistname.length > 0">
+                      <li *ngFor="let list of watchlistname; let i = index" (click)="savenewwatchlist(list.slug)">
+                        <a href="javascript:void(0);">{{list.name}}</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="cp_rightpanel">
+                <div class="mcpt" *ngIf="this.News_data.length > 0">
+                  <strong>MC: {{this.SymbolSocketdata?.marketCap
+                    ?(this.SymbolSocketdata?.marketCap|AmountFormat: 2):'N/A'}}
+                  </strong> 
+                  <span class="space_arrow"><strong>|</strong> </span>
+                  <strong>
+                    P/E: {{this.SymbolSocketdata?.peRatio?this.SymbolSocketdata?.peRatio:'N/A'}}
+                  </strong>
+                </div>
+                <strong
+                  [ngClass]="{'text-success': this.SymbolSocketdata?.changePercent>0, 'text-warning': this.SymbolSocketdata?.changePercent<0 , 'text-dark': this.SymbolSocketdata?.changePercent==0 }">
+                  <!-- {{this.SymbolSocketdata?.change
+                  ?( this.SymbolSocketdata?.changePercent>0 ? '+' + this.SymbolSocketdata?.change :
+                  this.SymbolSocketdata?.change | number : '.2-3'):'N/A'}} -->
+                  {{this.SymbolSocketdata?.change > 0? '+' : ''}}{{this.SymbolSocketdata ? (this.SymbolSocketdata?.change | number : '.2-2'):"N/A" }}
+                </strong>
+                <h4>
+                  ${{this.SymbolSocketdata?.latestPrice ? (this.SymbolSocketdata?.latestPrice | number : '.2-2'):'N/A'}}
+                </h4>
+                <!-- <h4>
+                  ${{this.SymbolSocketdata?.latestPrice ?
+                  addCommaFilter (this.SymbolSocketdata?.latestPrice):'N/A'}}</h4> -->
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 cp_rightsec">
+            <div class="cp_chart xs-hide">
+              <!-- TradingView Widget BEGIN -->
+              <div class="tradingview-widget-container">
+                <div id="tradingview_ceb0f"></div>
+              </div>
+              <!-- TradingView Widget END -->
+            </div>
+          </div>
+          <div class="col-md-8" id="full_section" [ngClass]="this.News_data.length > 0 ? 'class1' : 'hidden_box' ">
+            <div id="balanceSheet1" >
+              <ul class="nav nav-tabs w33" id="myTab" role="tablist">
+                <li class="nav-item" (click)="pageshow(1)">
+                  <a class="nav-link active" id="news-tab" data-toggle="tab" href="#news" role="tab"
+                    aria-controls="news" aria-selected="true">News</a>
+                </li>
+                <li class="nav-item" (click)="pageshow(2)">
+                  <a class="nav-link" id="numbers-tab" data-toggle="tab" href="#numbers" role="tab"
+                    aria-controls="numbers" aria-selected="false">numbers</a>
+                </li>
+                <li class="nav-item" (click)="pageshow(3)">
+                  <a class="nav-link" id="financials-tab" data-toggle="tab" href="#financials" role="tab"
+                    aria-controls="financials" aria-selected="false">Financials</a>
+                </li>
+                <li class="nav-item" (click)="pageshow(4)">
+                  <a class="nav-link" id="about-tab" data-toggle="tab" href="#about" role="tab" aria-controls="about"
+                    aria-selected="false">About</a>
+                </li>
+                <li class="nav-item lg-hide" (click)="pageshow(5)">
+                  <a class="nav-link" id="xschart-tab" data-toggle="tab" href="#chart" role="tab" aria-controls="chart"
+                    aria-selected="false">Chart</a>
+                </li>
+              </ul>
+              <div class="tab-content cp_profiletab_ct" id="myTabContent">
+                <div class="tab-pane fade show active" id="news" role="tabpanel" aria-labelledby="news-tab"
+                  *ngIf="this.parentTabValue == 1">
+                  <div class="row news_subhead news_searching">
+                    <div class="col-md-4">
+                      <div class="form-group news_seraching">
+                        <button type="button" class="sr_btn"><i class="fa fa-search"></i></button>
+                        <input type="text" class="form-control" [(ngModel)]="searchNews"
+                          (keyup.enter)="searchNewsFilter($event.target.value)"
+                          placeholder="Search {{this.SymbolSocketdata?.symbol ?this.SymbolSocketdata?.symbol:'N/A'}} News">
+                      </div>
+                    </div>
+                    <div class="col-md-8">
+                      <div class="datepicker btn-icon btn" mat-raised-button (click)="picker.open()">
+                        <img src="assets/img/SVG/datepicker_icon.svg" class="svg_icon" alt="">
+                        <input #toInput matInput [matDatepicker]="picker" readonly hidden
+                          (dateChange)="datechange($event)" [ngStyle]="{'width': datefilter ? '75px' : '0px'}">
+                        <mat-datepicker #picker></mat-datepicker>
+                      </div>
+                      <a class="btn btn-icon" href="javascript:void(0);" (click)="opennewsfilter()">
+                        <img src="assets/img/SVG/filter_icon.svg" class="svg_icon" alt=""><!-- {{ filterapplyed ? " Edit Publisher filters ":" Filter
+                        Publisher by "}} -->
+                      </a>
+                    </div>
+                  </div>
+                  <!-- <button *ngFor="let newsItem of this.Filterbynews2;" type="button" class="btn flt_tag">{{newsItem}}
+                  <i class="fa fa-times-circle" aria-hidden="true" (click)="removefilternews(newsItem)"></i></button> -->
+                  <div class="latest_news m-0 ptb">
+                    <ul>
+                      <ng-container *ngFor="let newsItem of this.News_data; let i=index;">
+                        <li title="{{ newsItem?.title ? newsItem?.title :''}} ">
+                          <small class="news_date xs-hide">{{(i==0) || (this.News_data[i-1]?.date?.replace('
+                            00:00:00','')!=newsItem?.date?.replace(' 00:00:00',''))?
+                            filterDate(newsItem?.date?.replace(' 00:00:00',''),false
+                            ):""}}</small>
+                          <small class="news_date lg-hide">{{filterDate(newsItem?.date?.replace('
+                            00:00:00',''),true)}}</small>
+                          <!-- <small class="news_date lg-hide" *ngIf="(newsItem.date | date:'yyyy-dd-MM')>
+                            (todayDate | date:'yyyy')">{{filterDate(newsItem?.date)}}</small> -->
+                          <small class="news_time">
+                            {{newsItem?.time?.replace('1900-01-01',"").substring(0,newsItem?.time?.replace('1900-01-01',"").length
+                            - 3)}}
+                          </small>
+                          <small class="comp_logo lg-hide">{{newsItem?.source_name}}</small>
+                          <p class="news_dicription">
+                            <!-- <strong>{{newsItem?.symbol? newsItem?.symbol :''}}</strong> -->
+                            <a class="color" href="javascript:void(0)"
+                              (click)="gotoNews(newsItem)">{{newsItem?.title}}</a>
+                            <small class="comp_logo xs-hide">{{newsItem?.source_name}}</small>
+                          </p>
+                        </li>
+                      </ng-container>
+                    </ul>
+                    <div *ngIf="this.News_data.length == 0" class="datanotfound">
+                      <span>News not available for this symbol </span>
+                    </div>
+                    <!-- <div class="laylodding" *ngIf="this.isnextpage"><img src="assets/img/Loading_v5b.gif" alt=""></div>  -->
+                    <div class="pagenation_warp">
+                      <ul *ngIf="demoarray.length > 0" class="pagenation">
+                        <li *ngIf="pageselect > 1" (click)="pageChange(pageselect-1)">prev</li>
+                        <ng-container *ngFor="let val of demoarray; let i = index;">
+                          <span *ngIf="valuecheck(val,demoarray[i-1])">...</span>
+                          <li (click)="pageChange(val)" [ngClass]="val == pageselect ? 'active':'' ">{{val}}</li>
+                        </ng-container>
+                        <li *ngIf="pageselect != pagenum" (click)="pageChange(pageselect+1)">next</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="numbers" role="tabpanel" aria-labelledby="numbers-tab"
+                  *ngIf="this.parentTabValue == 2">
+                  <div class="row news_subhead mt-1 mb-1 number_searching">
+                    <div class="col-md-5">
+                      <div class="form-group news_seraching newicon" id="search-bar">
+                        <button type="button" class="sr_btn"><i class="fa fa-search"></i></button>
+                        <form (ngSubmit)="getSearchData()" *ngIf="isShowSearchBar">
+                          <div class="form-group">
+                            <ng-select  #ngSelectSearch class="form-control search-bar" bindLabel="name"
+                              placeholder="Compare Symbol" [searchable]="true" [ngModelOptions]="{standalone: true}" (search)="searchValue=$event?.term;getSearchData()" [clearable]="true" [(ngModel)]="searchValue" (blur)="isOpenSearchBar=true;" (clear)="onClear()" clearAllText="" (keyup.enter)="comparebalance(searchValue)" (click)="comparebalance(searchValue)">
+                              <ng-container *ngIf="searchValue">
+                                <ng-option [value]="item.value" *ngFor="let item of select2Model">
+                                  <img
+                                    [src]="item.changePercent > 0 ? '../../assets/img/market_up.png' : item.changePercent < 0 ? '../../assets/img/market_down.png' : '../../assets/img/no_dataupdate.png'">
+                                  <a class="a-no-decore" (click)="comparebalance(item?.value)" (keyup.enter)="comparebalance(item?.value)" >
+                                    <strong>{{item?.value}}</strong><small>{{item.label}}</small>
+                                  </a>
+                                </ng-option>
+                              </ng-container>
+                            </ng-select>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                  <ng-container>
+                    <div class="data_numberbox" *ngFor="let itemnumber of getNumberedata;let i=index">
+                      <div class="data_numbercell">
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="listdata">
+                              <h5>Valuation</h5>
+                              <ul>
+                                <li>
+                                  <span class="value_name">Market Cap </span>
+                                  <span class="total_value">{{itemnumber?.MarketCap? '$'+(itemnumber?.MarketCap |
+                                    AmountFormat: 2) : 'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Enterprise Value</span>
+                                  <span class="total_value">{{itemnumber?.EnterpriseValue?
+                                    '$'+(itemnumber?.EnterpriseValue | AmountFormat: 2) : 'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Tangible Book Value </span>
+                                  <span class="total_value">{{itemnumber?.TangibleBookValue?
+                                    '$'+(itemnumber?.TangibleBookValue | AmountFormat: 2) : 'N/A'}}
+                                  </span>
+                                </li>
+                                <li>
+                                  <span class="value_name">P/E Ratio (TM)</span>
+                                  <span class="total_value">{{itemnumber?.PERatio? itemnumber.PERatio :'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Forward P/E </span>
+                                  <span class="total_value">
+                                    {{itemnumber?.ForwardPE? (itemnumber.ForwardPE | number : '.2-2') :'N/A'}}
+                                  </span>
+                                  <!-- *ngIf="itemnumber?.PriceToSales > 100" -->
+                                  <!-- *ngIf="itemnumber?.PriceToSales < 100" -->
+                                </li>
+                                <li>
+                                  <span class="value_name">Price to Sales</span>
+                                  <span class="total_value" *ngIf="itemnumber?.PriceToSales > 100">{{itemnumber?.PriceToSales? ''+(itemnumber.PriceToSales | AmountFormat: 2):'N/A'}}</span>
+                                  <span class="total_value" *ngIf="itemnumber?.PriceToSales < 100">{{itemnumber?.PriceToSales? ''+(itemnumber.PriceToSales | number : '.2-2'):'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Price to Book</span>
+                                  <span class="total_value" *ngIf="itemnumber?.PriceToBook > 100">{{itemnumber?.PriceToBook? ''+(itemnumber.PriceToBook | AmountFormat: 2):'N/A'}}</span>
+                                  <span class="total_value" *ngIf="itemnumber?.PriceToBook < 100">{{itemnumber?.PriceToBook? ''+(itemnumber.PriceToBook | number : '.2-2'):'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Price to Cash Flow</span>
+                                  <span class="total_value" *ngIf="itemnumber?.PriceToCashFlow > 100">{{itemnumber?.PriceToCashFlow? ''+(itemnumber.PriceToCashFlow | AmountFormat: 2):'N/A'}}</span>
+                                  <span class="total_value" *ngIf="itemnumber?.PriceToCashFlow < 100">{{itemnumber?.PriceToCashFlow? ''+(itemnumber.PriceToCashFlow | number : '.2-2'):'N/A'}}</span>
+                                </li>
+                              </ul>
+                            </div>
+                            <div class="listdata">
+                              <h5>Profitability</h5>
+                              <ul>
+                                <li>
+                                  <span class="value_name">Earnings Per Share (TTM) </span>
+                                  <span class="total_value">${{itemnumber?.EarningsPerShareTTM?
+                                    (itemnumber.EarningsPerShareTTM | number : '.2-2'):'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Earning Per Share (Forward) </span>
+                                  <span class="total_value">${{itemnumber?.EarningsPerShareForward?
+                                    (itemnumber.EarningsPerShareForward | number : '.2-2'):'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Gross Margin </span>
+                                  <!-- <span class="total_value" *ngIf="itemnumber?.GrossMargin > 100">{{itemnumber?.GrossMargin? (itemnumber.GrossMargin | AmountFormat: 2):'N/A'}}</span> -->
+                                  <span class="total_value">
+                                    {{itemnumber?.GrossMargin? ((itemnumber?.GrossMargin * 100) | number : '1.2-2')+'%':'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Operating Margin </span>
+                                  <span class="total_value">
+                                    {{itemnumber?.OperatingMargin? ((itemnumber?.OperatingMargin * 100) | number : '1.2-2')+'%':'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Net Margin</span>
+                                      <span class="total_value">
+                                        {{itemnumber?.NetMargin? ((itemnumber?.NetMargin * 100) | number : '1.2-2')+'%':'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Return on Assets</span>
+                                  <span class="total_value">
+                                    {{itemnumber?.ReturnonAssets? ((itemnumber?.ReturnonAssets * 100) | number : '1.2-2')+'%':'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Return on Equity</span>
+                                  <span class="total_value">
+                                    {{itemnumber?.ReturnonEquity? ((itemnumber?.ReturnonEquity * 100) | number : '1.2-2')+'%':'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Return on Capital</span>
+                                  <!-- <span class="total_value">{{itemnumber?.ReturnonCapital? (itemnumber?.ReturnonCapital | number : '2'): 'N/A'}}</span> -->
+                                  <span class="total_value">
+                                    {{itemnumber?.ReturnonCapital? ((itemnumber?.ReturnonCapital * 100) | number : '1.2-2')+'%':'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Revenue Per Employee</span>
+                                  <span class="total_value">${{itemnumber?.RevenuePerEmployee?
+                                    (itemnumber?.RevenuePerEmployee | number : '.2-2'):'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Income Per Employee</span>
+                                  <span class="total_value">${{itemnumber?.IncomePerEmployee?
+                                    (itemnumber.IncomePerEmployee | number : '.2-2'):'N/A'}}</span>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="listdata">
+                              <h5>Miscellaneous</h5>
+                              <ul>
+                                <li>
+                                  <span class="value_name">Dividend Yield </span>
+                                  <span class="total_value">{{ (itemnumber?.DividendYield |number) ?
+                                    (itemnumber?.DividendYield | number : '1.2-2' ) +'%':'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Dividend Amount</span>
+                                  <span class="total_value">{{itemnumber?.DividendAmount? (itemnumber.DividendAmount |
+                                    number : '.2-2'):'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Ex-Dividend Date </span>
+                                  <span class="total_value">{{itemnumber?.ExDividendDate ?
+                                    ( itemnumber?.ExDividendDate | date: 'MM/dd/yyyy' ):'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Earning Date</span>
+                                  <span class="total_value">{{itemnumber?.EarningsDate ?
+                                    ( itemnumber?.EarningsDate | date: 'MM/dd/yyyy' ):'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Volume</span>
+                                  <span class="total_value">{{itemnumber?.Volume? (itemnumber.Volume | number: '') :'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Avg Volume</span>
+                                  <span class="total_value">{{itemnumber?.AvgVolume? (itemnumber.AvgVolume | number: '')
+                                    :'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Beta</span>
+                                  <span class="total_value">{{itemnumber?.Beta? (itemnumber.Beta | number :
+                                    '.2-2'):'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">52 Week Range</span>
+                                  <span class="total_value">${{itemnumber?.Week52Low? (itemnumber.Week52Low | number :
+                                    '.2-2'):'N/A'}}-${{itemnumber?.Week52High? (itemnumber.Week52High | number :
+                                    '.2-2'):'N/A'}}</span>
+                                </li>
+                              </ul>
+                            </div>
+                            <div class="listdata">
+                              <h5>Liquidity</h5>
+                              <ul>
+                                <li>
+                                  <span class="value_name">Current Ratio</span>
+                                  <span class="total_value">{{itemnumber?.CurrentRatio? (itemnumber.CurrentRatio |
+                                    number : '.2-2') :'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Quick Ratio </span>
+                                  <span class="total_value">{{itemnumber?.QuickRatio? (itemnumber.QuickRatio | number :
+                                    '.2-2') :'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Cash Ratio</span>
+                                  <span class="total_value">{{itemnumber?.CashRatio? (itemnumber.CashRatio | number :
+                                    '.2-2') :'N/A'}}</span>
+                                </li>
+                              </ul>
+                            </div>
+                            <div class="listdata">
+                              <h5>Ownership</h5>
+                              <ul>
+                                <li>
+                                  <span class="value_name">Shares Outstanding</span>
+                                  <span class="total_value">{{itemnumber?.SharesOutstanding?
+                                    (itemnumber.SharesOutstanding | AmountFormat: 2):'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Share Short</span>
+                                  <span class="total_value">{{itemnumber?.SharesShort? (itemnumber.SharesShort | AmountFormat: 2) :'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Short Percentage </span>
+                                  <!-- <span class="total_value">{{itemnumber?.ShortPercentage? (itemnumber.ShortPercentage | number : '.2-2') :'N/A'}}%
+                                  </span> -->
+                                  <span>{{(itemnumber.ShortPercentage || itemnumber.ShortPercentage == 0) ?
+                                    ( itemnumber.ShortPercentage>0 ? '' + ((itemnumber.ShortPercentage * 100)|
+                                    number : '1.2-2' ) : ( itemnumber.ShortPercentage) )+'%':'N/A' }}
+                                </span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Insider Owned</span>
+                                  <span class="total_value">{{itemnumber?.InsiderOwned? (itemnumber.InsiderOwned |
+                                    number : '.2-2') :'N/A'}}%</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Institution Owned </span>
+                                  <span class="total_value">{{itemnumber?.InsiderOwned? (itemnumber.InsiderOwned |
+                                    number : '.2-2') :'N/A'}}%</span>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="data_numbercell newnumber_cell" *ngIf="this.numsymbol != null">
+                        <div class="row news_btn_se">
+                          <div class="col-md-12 news_btn_in">
+                            <button type="button" (click)="clearbalance()" >{{this.numsymbol}} X</button>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="listdata">
+                              <h5>Valuation</h5>
+                              <ul>
+                                <li>
+                                  <span class="value_name">Market Cap </span>
+                                  <span class="total_value">{{numberGet[i]?.MarketCap? '$'+(numberGet[i]?.MarketCap |
+                                    AmountFormat: 2) : 'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Enterprise Value</span>
+                                  <span class="total_value">{{numberGet[i]?.EnterpriseValue?
+                                    '$'+(numberGet[i]?.EnterpriseValue | AmountFormat: 2) : 'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Tangible Book Value </span>
+                                  <span class="total_value">{{numberGet[i]?.TangibleBookValue?
+                                    '$'+(numberGet[i]?.TangibleBookValue | AmountFormat: 2) : 'N/A'}}
+                                  </span>
+                                </li>
+                                <li>
+                                  <span class="value_name">P/E Ratio (TM)</span>
+                                  <span class="total_value">{{numberGet[i]?.PERatio? numberGet[i].PERatio :'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Forward P/E </span>
+                                  <span class="total_value">
+                                    {{numberGet[i]?.ForwardPE? (numberGet[i].ForwardPE | number : '.2-2') :'N/A'}}
+                                  </span>
+                                  <!-- {{number?.ForwardPE +
+                                  "$"+ (item?.ForwardPE | number : '.2-3'):'N/A'}} -->
+                                </li>
+                                <li>
+                                  <span class="value_name">Price to Sales</span>
+                                  <span class="total_value" *ngIf="numberGet[i]?.PriceToSales > 100">{{numberGet[i]?.PriceToSales? ''+(numberGet[i].PriceToSales | AmountFormat: 2):'N/A'}}</span>
+                                  <span class="total_value" *ngIf="numberGet[i]?.PriceToSales < 100">{{numberGet[i]?.PriceToSales? ''+(numberGet[i].PriceToSales | number : '.2-2'):'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Price to Book</span>
+                                  <span class="total_value" *ngIf="numberGet[i]?.PriceToBook > 100">{{numberGet[i]?.PriceToBook? ''+(numberGet[i].PriceToBook | AmountFormat: 2):'N/A'}}</span>
+                                  <span class="total_value" *ngIf="numberGet[i]?.PriceToBook < 100">{{numberGet[i]?.PriceToBook? ''+(numberGet[i].PriceToBook | number : '.2-2'):'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Price to Cash Flow</span>
+                                  <span class="total_value" *ngIf="numberGet[i]?.PriceToCashFlow > 100">{{numberGet[i]?.PriceToCashFlow? ''+(numberGet[i].PriceToCashFlow | AmountFormat: 2):'N/A'}}</span>
+                                  <span class="total_value" *ngIf="numberGet[i]?.PriceToCashFlow < 100">{{numberGet[i]?.PriceToCashFlow? ''+(numberGet[i].PriceToCashFlow | number : '.2-2'):'N/A'}}</span>
+                                </li>
+                              </ul>
+                            </div>
+                            <div class="listdata">
+                              <h5>Profitability</h5>
+                              <ul>
+                                <li>
+                                  <span class="value_name">Earnings Per Share (TTM) </span>
+                                  <span class="total_value">${{numberGet[i]?.EarningsPerShareTTM?
+                                    (numberGet[i].EarningsPerShareTTM | number : '.2-2'):'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Earning Per Share (Forward) </span>
+                                  <span class="total_value">${{numberGet[i]?.EarningsPerShareForward?
+                                    (numberGet[i].EarningsPerShareForward | number : '.2-2'):'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Gross Margin</span>
+                                  <span class="total_value">
+                                    {{numberGet[i]?.GrossMargin? ((numberGet[i]?.GrossMargin * 100) | number : '1.2-2')+'%':'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Operating Margin </span>
+                                  <span class="total_value">
+                                    {{numberGet[i]?.OperatingMargin? ((numberGet[i]?.OperatingMargin * 100) | number : '1.2-2')+'%':'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Net Margin</span>
+                                      <span class="total_value">
+                                        {{numberGet[i]?.NetMargin? ((numberGet[i]?.NetMargin * 100) | number : '1.2-2')+'%':'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Return on Assets</span>
+                                  <span class="total_value">
+                                    {{numberGet[i]?.ReturnonAssets? ((numberGet[i]?.ReturnonAssets * 100) | number : '1.2-2')+'%':'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Return on Equity</span>
+                                  <span class="total_value">
+                                    {{numberGet[i]?.ReturnonEquity? ((numberGet[i]?.ReturnonEquity * 100) | number : '1.2-2')+'%':'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Return on Capital</span>
+                                  <span class="total_value">
+                                    {{numberGet[i]?.ReturnonCapital? ((numberGet[i]?.ReturnonCapital * 100) | number : '1.2-2')+'%':'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Revenue Per Employee</span>
+                                  <span class="total_value">{{numberGet[i]?.RevenuePerEmployee?
+                                    (numberGet[i]?.RevenuePerEmployee | number : '.2-2'):'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Income Per Employee</span>
+                                  <span class="total_value">{{numberGet[i]?.IncomePerEmployee?
+                                    (numberGet[i].IncomePerEmployee | number : '.2-2'):'N/A'}}</span>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="listdata">
+                              <h5>Miscellaneous</h5>
+                              <ul>
+                                <li>
+                                  <span class="value_name">Dividend Yield </span>
+                                  <span class="total_value">{{ (numberGet[i]?.DividendYield |number) ?
+                                    (numberGet[i]?.DividendYield | number : '1.2-2' ) +'%':'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Dividend Amount</span>
+                                  <span class="total_value">{{numberGet[i]?.DividendAmount? (numberGet[i].DividendAmount |
+                                    number : '.2-2'):'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Ex-Dividend Date </span>
+                                  <span class="total_value">{{numberGet[i]?.ExDividendDate ?
+                                    ( numberGet[i]?.ExDividendDate | date: 'MM/dd/yyyy' ):'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Earning Date</span>
+                                  <span class="total_value">{{numberGet[i]?.EarningsDate ?
+                                    ( numberGet[i]?.EarningsDate | date: 'MM/dd/yyyy' ):'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Volume</span>
+                                  <span class="total_value">{{numberGet[i]?.Volume? numberGet[i].Volume :'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Avg Volume</span>
+                                  <span class="total_value">{{numberGet[i]?.AvgVolume? numberGet[i].AvgVolume
+                                    :'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Beta</span>
+                                  <span class="total_value">{{numberGet[i]?.Beta? (numberGet[i].Beta | number :
+                                    '.2-2'):'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">52 Week Range</span>
+                                  <span class="total_value">${{numberGet[i]?.Week52High? (numberGet[i].Week52High | number :
+                                    '.2-2'):'N/A'}}-${{numberGet[i]?.Week52Low? (numberGet[i].Week52Low | number :
+                                    '.2-2'):'N/A'}}</span>
+                                </li>
+                              </ul>
+                            </div>
+                            <div class="listdata">
+                              <h5>Liquidity</h5>
+                              <ul>
+                                <li>
+                                  <span class="value_name">Current Ratio</span>
+                                  <span class="total_value">{{numberGet[i]?.CurrentRatio? (numberGet[i].CurrentRatio |
+                                    number : '.2-2') :'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Quick Ratio </span>
+                                  <span class="total_value">{{numberGet[i]?.QuickRatio? (numberGet[i].QuickRatio | number :
+                                    '.2-2') :'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Cash Ratio</span>
+                                  <span class="total_value">{{numberGet[i]?.CashRatio? (numberGet[i].CashRatio | number :
+                                    '.2-2') :'N/A'}}</span>
+                                </li>
+                              </ul>
+                            </div>
+                            <div class="listdata">
+                              <h5>Ownership</h5>
+                              <ul>
+                                <li>
+                                  <span class="value_name">Shares Outstanding</span>
+                                  <span class="total_value">{{numberGet[i]?.SharesOutstanding?
+                                    (numberGet[i].SharesOutstanding | AmountFormat: 2) :'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Share Short</span>
+                                  <span class="total_value">{{numberGet[i]?.SharesShort? (numberGet[i].SharesShort | AmountFormat: 2) :'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Short Percentage </span>
+                                  <span class="total_value">
+                                    {{(numberGet[i]?.ShortPercentage || numberGet[i]?.ShortPercentage == 0) ?
+                                      ( numberGet[i]?.ShortPercentage>0 ? '' + ((numberGet[i]?.ShortPercentage * 100)|
+                                      number : '1.2-2' ) : ( numberGet[i]?.ShortPercentage) )+'%':'N/A' }}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Insider Owned</span>
+                                  <span class="total_value">{{numberGet[i]?.InsiderOwned? (numberGet[i].InsiderOwned |
+                                    number : '.2-2') :'N/A'}}%</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Institution Owned </span>
+                                  <span class="total_value">{{numberGet[i]?.InsiderOwned? (numberGet[i].InsiderOwned |
+                                    number : '.2-2') :'N/A'}}%</span>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="data_numbercell newnumber_cell" *ngIf="isSuperUser1">
+                        <div class="row news_btn_se">
+                          <div class="col-md-12 news_btn_in">
+                            <button type="button" (click)="clearbalance()">{{this.numsymbol2}} X</button>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="listdata">
+                              <h5>Valuation</h5>
+                              <ul>
+                                <li>
+                                  <span class="value_name">Market Cap </span>
+                                  <span class="total_value">{{numberGet2[i]?.MarketCap? '$'+(numberGet2[i]?.MarketCap |
+                                    AmountFormat: 2) : 'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Enterprise Value</span>
+                                  <span class="total_value">{{numberGet2[i]?.EnterpriseValue?
+                                    '$'+(numberGet2[i]?.EnterpriseValue | AmountFormat: 2) : 'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Tangible Book Value </span>
+                                  <span class="total_value">{{numberGet2[i]?.TangibleBookValue?
+                                    '$'+(numberGet2[i]?.TangibleBookValue | AmountFormat: 2) : 'N/A'}}
+                                  </span>
+                                </li>
+                                <li>
+                                  <span class="value_name">P/E Ratio (TM)</span>
+                                  <span class="total_value">{{numberGet2[i]?.PERatio? numberGet2[i].PERatio :'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Forward P/E </span>
+                                  <span class="total_value">
+                                    {{numberGet2[i]?.ForwardPE? (numberGet2[i].ForwardPE | number : '.2-2') :'N/A'}}
+                                  </span>
+                                  <!-- {{number?.ForwardPE +
+                                  "$"+ (item?.ForwardPE | number : '.2-3'):'N/A'}} -->
+                                </li>
+                                <li>
+                                  <span class="value_name">Price to Sales</span>
+                                  <span class="total_value" *ngIf="numberGet2[i]?.PriceToSales > 100">{{numberGet2[i]?.PriceToSales? ''+(numberGet2[i].PriceToSales | AmountFormat: 2):'N/A'}}</span>
+                                  <span class="total_value" *ngIf="numberGet2[i]?.PriceToSales < 100">{{numberGet2[i]?.PriceToSales? ''+(numberGet2[i].PriceToSales | number : '.2-2'):'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Price to Book</span>
+                                  <span class="total_value" *ngIf="numberGet2[i]?.PriceToBook > 100">{{numberGet2[i]?.PriceToBook? ''+(numberGet2[i].PriceToBook | AmountFormat: 2):'N/A'}}</span>
+                                  <span class="total_value" *ngIf="numberGet2[i]?.PriceToBook < 100">{{numberGet2[i]?.PriceToBook? ''+(numberGet2[i].PriceToBook | number : '.2-2'):'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Price to Cash Flow</span>
+                                  <span class="total_value" *ngIf="numberGet2[i]?.PriceToCashFlow > 100">{{numberGet2[i]?.PriceToCashFlow? ''+(numberGet2[i].PriceToCashFlow |
+                                    AmountFormat: 2):'N/A'}}</span>
+                                    <span class="total_value" *ngIf="numberGet2[i]?.PriceToCashFlow < 100">{{numberGet2[i]?.PriceToCashFlow? ''+(numberGet2[i].PriceToCashFlow |
+                                      number : '.2-2'):'N/A'}}</span>
+                                </li>
+                              </ul>
+                            </div>
+                            <div class="listdata">
+                              <h5>Profitability</h5>
+                              <ul>
+                                <li>
+                                  <span class="value_name">Earnings Per Share (TTM) </span>
+                                  <span class="total_value">${{numberGet2[i]?.EarningsPerShareTTM?
+                                    (numberGet2[i].EarningsPerShareTTM | number : '.2-2'):'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Earning Per Share (Forward) </span>
+                                  <span class="total_value">${{numberGet2[i]?.EarningsPerShareForward?
+                                    (numberGet2[i].EarningsPerShareForward | number : '.2-2'):'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Gross Margin </span>
+                                  <span class="total_value">
+                                    {{numberGet2[i]?.GrossMargin? ((numberGet2[i]?.GrossMargin * 100) | number : '1.2-2')+'%':'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Operating Margin </span>
+                                    <span class="total_value">
+                                      {{numberGet2[i]?.OperatingMargin? ((numberGet2[i]?.OperatingMargin * 100) | number : '1.2-2')+'%':'N/A'}}</span>
+                                      <!-- <span class="total_value" *ngIf="itemnumber?.NetMargin < 0">               {{itemnumber?.NetMargin? (itemnumber?.NetMargin | number : '1.2-2'):'N/A'}}%</span> -->
+                                </li>
+                                <li>
+                                  <span class="value_name">Net Margin</span>
+                                    <span class="total_value">
+                                      {{numberGet2[i]?.NetMargin? ((numberGet2[i]?.NetMargin * 100) | number : '1.2-2')+'%':'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Return on Assets</span>
+                                  <span class="total_value">
+                                    {{numberGet2[i]?.ReturnonAssets? ((numberGet2[i]?.ReturnonAssets * 100) | number : '1.2-2')+'%':'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Return on Equity</span>
+                                  <span class="total_value">
+                                    {{numberGet2[i]?.ReturnonEquity? ((numberGet2[i]?.ReturnonEquity * 100) | number : '1.2-2')+'%':'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Return on Capital</span>
+                                  <span class="total_value">
+                                    {{numberGet2[i]?.ReturnonCapital? ((numberGet2[i]?.ReturnonCapital * 100) | number : '1.2-2')+'%':'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Revenue Per Employee</span>
+                                  <span class="total_value">{{numberGet2[i]?.RevenuePerEmployee?
+                                    (numberGet2[i]?.RevenuePerEmployee | number : '.2-2'):'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Income Per Employee</span>
+                                  <span class="total_value">{{numberGet2[i]?.IncomePerEmployee?
+                                    (numberGet2[i].IncomePerEmployee | number : '.2-2'):'N/A'}}</span>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="listdata">
+                              <h5>Miscellaneous</h5>
+                              <ul>
+                                <li>
+                                  <span class="value_name">Dividend Yield </span>
+                                  <span class="total_value">{{ (numberGet2[i]?.DividendYield |number) ?
+                                    (numberGet2[i]?.DividendYield | number : '1.2-2' ) +'%':'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Dividend Amount</span>
+                                  <span class="total_value">{{numberGet2[i]?.DividendAmount? (numberGet2[i].DividendAmount |
+                                    number : '.2-2'):'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Ex-Dividend Date </span>
+                                  <span class="total_value">{{numberGet2[i]?.ExDividendDate ?
+                                    ( numberGet2[i]?.ExDividendDate | date: 'MM/dd/yyyy' ):'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Earning Date</span>
+                                  <span class="total_value">{{numberGet2[i]?.EarningsDate ?
+                                    ( numberGet2[i]?.EarningsDate | date: 'MM/dd/yyyy' ):'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Volume</span>
+                                  <span class="total_value">{{numberGet2[i]?.Volume? numberGet2[i].Volume :'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Avg Volume</span>
+                                  <span class="total_value">{{numberGet2[i]?.AvgVolume? numberGet2[i].AvgVolume
+                                    :'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Beta</span>
+                                  <span class="total_value">{{numberGet2[i]?.Beta? (numberGet2[i].Beta | number :
+                                    '.2-2'):'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">52 Week Range</span>
+                                  <span class="total_value">${{numberGet2[i]?.Week52High? (numberGet2[i].Week52High | number :
+                                    '.2-2'):'N/A'}}-${{numberGet2[i]?.Week52Low? (numberGet2[i].Week52Low | number :
+                                    '.2-2'):'N/A'}}</span>
+                                </li>
+                              </ul>
+                            </div>
+                            <div class="listdata">
+                              <h5>Liquidity</h5>
+                              <ul>
+                                <li>
+                                  <span class="value_name">Current Ratio</span>
+                                  <span class="total_value">{{numberGet2[i]?.CurrentRatio? (numberGet2[i].CurrentRatio |
+                                    number : '.2-2') :'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Quick Ratio </span>
+                                  <span class="total_value">{{numberGet2[i]?.QuickRatio? (numberGet2[i].QuickRatio | number :
+                                    '.2-2') :'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Cash Ratio</span>
+                                  <span class="total_value">{{numberGet2[i]?.CashRatio? (numberGet2[i].CashRatio | number :
+                                    '.2-2') :'N/A'}}</span>
+                                </li>
+                              </ul>
+                            </div>
+                            <div class="listdata">
+                              <h5>Ownership</h5>
+                              <ul>
+                                <li>
+                                  <span class="value_name">Shares Outstanding</span>
+                                  <span class="total_value">{{numberGet2[i]?.SharesOutstanding?
+                                    (numberGet2[i].SharesOutstanding | AmountFormat: 2):'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Share Short</span>
+                                  <span class="total_value">{{numberGet2[i]?.SharesShort? (numberGet2[i].SharesShort | AmountFormat: 2) :'N/A'}}</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Short Percentage </span>
+                                  <span class="total_value">
+                                    {{(numberGet2[i]?.ShortPercentage || numberGet2[i]?.ShortPercentage == 0) ?
+                                      ( numberGet2[i]?.ShortPercentage>0 ? '' + ((numberGet2[i]?.ShortPercentage * 100)|
+                                      number : '1.2-2' ) : ( numberGet[i]?.ShortPercentage) )+'%':'N/A' }}
+                                  </span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Insider Owned</span>
+                                  <span class="total_value">{{numberGet2[i]?.InsiderOwned? (numberGet2[i].InsiderOwned |
+                                    number : '.2-2') :'N/A'}}%</span>
+                                </li>
+                                <li>
+                                  <span class="value_name">Institution Owned </span>
+                                  <span class="total_value">{{numberGet2[i]?.InsiderOwned? (numberGet2[i].InsiderOwned |
+                                    number : '.2-2') :'N/A'}}%</span>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+                <div class="tab-pane fade" id="financials" role="tabpanel" aria-labelledby="financials-tab"
+                  *ngIf="this.parentTabValue == 3" >
+                  <div class="row news_subhead mt-2 mb-1 financial_search" >
+                    <div class="col-md-5">
+                      <div class="form-group news_seraching newicon" id="search-bar">
+                        <button type="button" class="sr_btn"><i class="fa fa-search"></i></button>
+                        <form (ngSubmit)="getSearchData()" *ngIf="isShowSearchBar">
+                          <div class="form-group">
+                            <ng-select  #ngSelectSearch class="form-control search-bar" bindLabel="name"
+                              placeholder="Compare Symbol" [searchable]="true" [ngModelOptions]="{standalone: true}"
+                               (search)="searchValue=$event?.term;getSearchData()"
+                              [clearable]="true" [(ngModel)]="searchValue" 
+                              (focus)="showHideOptions();" (blur)="isOpenSearchBar=false;" (clear)="onClear()"
+                              clearAllText="" (keyup.enter)="comparebalance(searchValue)" (click)="comparebalance(searchValue)">
+                              <ng-container *ngIf="searchValue">
+                                <ng-option [value]="item.value" *ngFor="let item of select2Model">
+                                  <img
+                                    [src]="item.changePercent > 0 ? '../../assets/img/market_up.png' : item.changePercent < 0 ? '../../assets/img/market_down.png' : '../../assets/img/no_dataupdate.png' ">
+                                  <a class="a-no-decore" (click)="comparebalance(item?.value)" (keyup.enter)="comparebalance(item?.value)" >
+                                    <strong>{{item?.value}}</strong><small>{{item.label}}</small>
+                                  </a>
+                                </ng-option>
+                              </ng-container>
+                            </ng-select>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                    <div class="col-md-7">
+                      <ul class="nav nav-tabs w33" id="myTab2" role="tablist">
+                        <li class="nav-item">
+                          <a class="nav-link active text-capitalize" id="balance-tab" data-toggle="tab" href="#balance"
+                            (click)="tabValue('balance-tab')" role="tab" aria-controls="balance"
+                            aria-selected="true">Balance Sheet</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link text-capitalize" (click)="tabValue('cashflow-tab')" id="cashflow-tab"
+                            data-toggle="tab" href="#cashflow" role="tab" aria-controls="cashflow"
+                            aria-selected="false">Cash Flow</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link text-capitalize" (click)="tabValue('income-tab')" id="income-tab"
+                            data-toggle="tab" href="#income" role="tab" aria-controls="income"
+                            aria-selected="false">Income </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="tab-content fainens_contant" id="myTabContent">
+                    <!-- BALANCE START -->
+                    <div class="tab-pane fade show active three_staptb" id="balance" role="tabpanel"
+                      aria-labelledby="home-tab" *ngIf="this.tab_Value == 'balance-tab'">
+                      <!-- BALANCE TABLE START -->
+                      <table id="balanceSheet1" class="table fainens_table new_sheet">
+                        <thead class="year_headedata">
+                          <tr>
+                            <th></th>
+                            <th *ngFor="let balance of getdata;let i=index" width="17.5%">
+                              <span class="widthbox">{{balance?.date | date:'yyyy'}}</span>
+                              <span class="widthbox" *ngIf="this.symbol1 != null" (click)="clearbalance()">
+                                <span class="bluebg">{{this.symbol1}}<i class="fa fa-close"></i></span>
+                              </span>
+                              <span class="widthbox company_data2"  *ngIf="isSuperBal1"
+                                (click)="clearbala2()">
+                                <span class="bluebg">{{this.symbol2}}<i class="fa fa-close"></i></span>
+                              </span>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr data-toggle="collapse" data-target=".total_assets" role="button" aria-expanded="false"
+                            aria-controls="">
+                            <th style="width: 15%;"><i class="fa-1x fa fa-angle-down"></i>
+                              <h1>Total Assets</h1>
+                            </th>
+                            <td width="23%" *ngFor="let balance of getdata;let i=index">
+                              <span class="widthbox">
+                                {{balance?.totalAssets?(balance?.totalAssets|AmountFormat:2):'N/A'}}</span>
+                              <span class="widthbox" *ngIf="isSuperBalance">
+                                {{balanceGet[i]?.totalAssets?(balanceGet[i]?.totalAssets|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2" *ngIf="isSuperBal1">
+                                {{balance2[i]?.totalAssets?(balance2[i]?.totalAssets|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr class="collapse total_assets" data-toggle="collapse" data-target=".current_assets"
+                            role="button" aria-expanded="false" aria-controls="">
+                            <th style="width: 20%;padding-left: 20px;"><i class="fa fa-angle-down fa-2x"></i>
+                              <h2>Current Assets</h2>
+                            </th>
+                            <td width="23%" *ngFor="let balance of getdata;let i=index">
+                              <span class="widthbox">
+                                {{balance?.totalCurrentAssets?(balance?.totalCurrentAssets|AmountFormat:2):'N/A'}}</span>
+                              <span class="widthbox" *ngIf="isSuperBalance">
+                                {{balanceGet[i]?.totalCurrentAssets?(balanceGet[i]?.totalCurrentAssets|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2" *ngIf="isSuperBal1">
+                                {{balance2[i]?.totalCurrentAssets?(balance2[i]?.totalCurrentAssets|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr class="collapse current_assets">
+                            <td class="bor_bgnone" style="width: 20%;padding-left: 40px;">Cash</td>
+                            <td width="23%" *ngFor="let balance of getdata;let i=index">
+                              <span class="widthbox"> {{balance?.cash?(balance?.cash|AmountFormat:2):'N/A'}}</span>
+                              <span class="widthbox" *ngIf="isSuperBalance">
+                                {{balanceGet[i]?.cash?(balanceGet[i]?.cash|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2" *ngIf="isSuperBal1">
+                                {{balance2[i]?.cash?(balance2[i]?.cash|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr class="collapse current_assets">
+                            <td class="bor_bgnone" style="width: 20%;padding-left: 40px;">Short Term Investments</td>
+                            <td width="23%" *ngFor="let balance of getdata;let i=index">
+                              <span class="widthbox">
+                                {{balance?.shortTermInvestments?(balance?.shortTermInvestments|AmountFormat:2):'N/A'}}</span>
+                              <span class="widthbox" *ngIf="isSuperBalance">
+                                {{balanceGet[i]?.shortTermInvestments?(balanceGet[i]?.shortTermInvestments|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2" *ngIf="isSuperBal1">
+                                {{balance2[i]?.shortTermInvestments?(balance2[i]?.shortTermInvestments|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr class="collapse current_assets">
+                            <td class="bor_bgnone" style="width: 20%;padding-left: 40px;">Receivables</td>
+                            <td width="23%" *ngFor="let balance of getdata;let i=index">
+                              <span class="widthbox">
+                                {{balance?.netReceivables?(balance?.netReceivables|AmountFormat:2):'N/A'}}</span>
+                              <span class="widthbox" *ngIf="isSuperBalance">
+                                {{balanceGet[i]?.netReceivables?(balanceGet[i]?.netReceivables|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2" *ngIf="isSuperBal1">
+                                {{balance2[i]?.netReceivables?(balance2[i]?.netReceivables|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr class="collapse current_assets">
+                            <td class="bor_bgnone" style="width: 20%;padding-left: 40px;">Inventory</td>
+                            <td width="23%" *ngFor="let balance of getdata;let i=index">
+                              <span class="widthbox">
+                                {{balance?.inventory?(balance?.inventory|AmountFormat:2):'N/A'}}</span>
+                              <span class="widthbox" *ngIf="isSuperBalance">
+                                {{balanceGet[i]?.inventory?(balanceGet[i]?.inventory|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2" *ngIf="isSuperBal1">
+                                {{balance2[i]?.inventory?(balance2[i]?.inventory|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr class="collapse current_assets">
+                            <td class="bor_bgnone" style="width: 20%;padding-left: 40px;">Other Current Assets</td>
+                            <td width="23%" *ngFor="let balance of getdata;let i=index">
+                              <span class="widthbox">
+                                {{balance?.otherCurrentAssets?(balance?.otherCurrentAssets|AmountFormat:2):'N/A'}}</span>
+                              <span class="widthbox" *ngIf="isSuperBalance">
+                                {{balanceGet[i]?.otherCurrentAssets?(balanceGet[i]?.otherCurrentAssets|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2" *ngIf="isSuperBal1">
+                                {{balance2[i]?.otherCurrentAssets?(balance2[i]?.otherCurrentAssets|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr class="collapse total_assets" data-toggle="collapse" data-target=".non_assets"
+                            role="button" aria-expanded="true" aria-controls="">
+                            <th style="width: 20%;padding-left: 20px;">
+                              <i class="fa fa-angle-down fa-2x"></i>
+                              <h2>Non-Current Assets</h2>
+                            </th>
+                            <td width="23%" *ngFor="let balance of getdata;let i=index">
+                              <span class="widthbox">
+                                {{balance?.NonCurrentAssets?(balance?.NonCurrentAssets|AmountFormat:2):'N/A'}}</span>
+                              <span class="widthbox" *ngIf="isSuperBalance">
+                                {{balanceGet[i]?.NonCurrentAssets?(balanceGet[i]?.NonCurrentAssets|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2" *ngIf="isSuperBal1">
+                                {{balance2[i]?.NonCurrentAssets?(balance2[i]?.NonCurrentAssets|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr class="collapse non_assets">
+                            <td class="bor_bgnone" style="width: 20%;padding-left: 40px;">Property Plant and Equipmen
+                            </td>
+                            <td width="23%" *ngFor="let balance of getdata;let i=index">
+                              <span class="widthbox">
+                                {{balance?.propertyPlantEquipment?(balance?.propertyPlantEquipment|AmountFormat:2):'N/A'}}</span>
+                              <span class="widthbox" *ngIf="isSuperBalance">
+                                {{balanceGet[i]?.propertyPlantEquipment?(balanceGet[i]?.propertyPlantEquipment|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2" *ngIf="isSuperBal1">
+                                {{balance2[i]?.propertyPlantEquipment?(balance2[i]?.propertyPlantEquipment|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr class="collapse non_assets">
+                            <td class="bor_bgnone" style="width: 20%;padding-left: 40px;">Goodwill</td>
+                            <td width="23%" *ngFor="let balance of getdata;let i=index">
+                              <span class="widthbox">
+                                {{balance?.goodWill?(balance?.goodWill|AmountFormat:2):'N/A'}}</span>
+                              <span class="widthbox" *ngIf="isSuperBalance">
+                                {{balanceGet[i]?.goodWill?(balanceGet[i]?.goodWill|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2" *ngIf="isSuperBal1">
+                                {{balance2[i]?.goodWill?(balance2[i]?.goodWill|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr class="collapse non_assets">
+                            <td class="bor_bgnone" style="width: 20%;padding-left: 40px;">Intangible Assets</td>
+                            <td width="23%" *ngFor="let balance of getdata;let i=index">
+                              <span class="widthbox">
+                                {{balance?.intangibleAssets?(balance?.intangibleAssets|AmountFormat:2):'N/A'}}</span>
+                              <span class="widthbox" *ngIf="isSuperBalance">
+                                {{balanceGet[i]?.intangibleAssets?(balanceGet[i]?.intangibleAssets|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2" *ngIf="isSuperBal1">
+                                {{balance2[i]?.intangibleAssets?(balance2[i]?.intangibleAssets|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr class="collapse non_assets">
+                            <td class="bor_bgnone" style="width: 20%;padding-left: 40px;">Long Term Investments</td>
+                            <td width="23%" *ngFor="let balance of getdata;let i=index">
+                              <span class="widthbox">
+                                {{balance?.longTermInvestments?(balance?.longTermInvestments|AmountFormat:2):'N/A'}}</span>
+                              <span class="widthbox" *ngIf="isSuperBalance">
+                                {{balanceGet[i]?.longTermInvestments?(balanceGet[i]?.longTermInvestments|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2" *ngIf="isSuperBal1">
+                                {{balance2[i]?.longTermInvestments?(balance2[i]?.longTermInvestments|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr class="collapse non_assets">
+                            <td class="bor_bgnone" style="width: 20%;padding-left: 40px;">Other Non-Current Assets</td>
+                            <td width="23%" *ngFor="let balance of getdata;let i=index">
+                              <span class="widthbox">
+                                {{balance?.otherAssets?(balance?.otherAssets|AmountFormat:2):'N/A'}}</span>
+                              <span class="widthbox" *ngIf="isSuperBalance">
+                                {{balanceGet[i]?.otherAssets?(balanceGet[i]?.otherAssets|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2" *ngIf="isSuperBal1">
+                                {{balance2[i]?.otherAssets?(balance2[i]?.otherAssets|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr data-toggle="collapse" data-target=".total_liabilities" role="button"
+                            aria-expanded="false" aria-controls="">
+                            <th style="width: 15%;">
+                              <i class="fa fa-angle-down fa-1x"></i>
+                              <h1> Total Liabilities</h1>
+                            </th>
+                            <td width="23%" *ngFor="let balance of getdata;let i=index">
+                              <span class="widthbox">
+                                {{balance?.totalLiab?(balance?.totalLiab|AmountFormat:2):'N/A'}}</span>
+                              <span class="widthbox" *ngIf="isSuperBalance">
+                                {{balanceGet[i]?.totalLiab?(balanceGet[i]?.totalLiab|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2" *ngIf="isSuperBal1">
+                                {{balance2[i]?.totalLiab?(balance2[i]?.totalLiab|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr class="collapse total_liabilities" data-toggle="collapse"
+                            data-target=".current_liabilities" role="button" aria-expanded="true" aria-controls="">
+                            <th style="width: 20%;padding-left: 20px;">
+                              <i class="fa fa-angle-down fa-2x"></i>
+                              <h2>Current Liabilities</h2>
+                            </th>
+                            <td width="23%" *ngFor="let balance of getdata;let i=index">
+                              <span class="widthbox">
+                                {{balance?.totalCurrentLiabilities?(balance?.totalCurrentLiabilities|AmountFormat:2):'N/A'}}</span>
+                              <span class="widthbox" *ngIf="isSuperBalance">
+                                {{balanceGet[i]?.totalCurrentLiabilities?(balanceGet[i]?.totalCurrentLiabilities|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2" *ngIf="isSuperBal1">
+                                {{balance2[i]?.totalCurrentLiabilities?(balance2[i]?.totalCurrentLiabilities|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr class="collapse current_liabilities">
+                            <td class="bor_bgnone" style="width: 20%;padding-left: 40px;">Accounts Payable</td>
+                            <td width="23%" *ngFor="let balance of getdata;let i=index">
+                              <span class="widthbox">
+                                {{balance?.accountsPayable?(balance?.accountsPayable|AmountFormat:2):'N/A'}}</span>
+                              <span class="widthbox" *ngIf="isSuperBalance">
+                                {{balanceGet[i]?.accountsPayable?(balanceGet[i]?.accountsPayable|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2" *ngIf="isSuperBal1">
+                                {{balance2[i]?.accountsPayable?(balance2[i]?.accountsPayable|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr class="collapse current_liabilities">
+                            <td class="bor_bgnone" style="width: 20%;padding-left: 40px;">Other Current Liabilities</td>
+                            <td width="23%" *ngFor="let balance of getdata;let i=index">
+                              <span class="widthbox">
+                                {{balance?.otherCurrentLiab?(balance?.otherCurrentLiab|AmountFormat:2):'N/A'}}</span>
+                              <span class="widthbox" *ngIf="isSuperBalance">
+                                {{balanceGet[i]?.otherCurrentLiab?(balanceGet[i]?.otherCurrentLiab|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2" *ngIf="isSuperBal1">
+                                {{balance2[i]?.otherCurrentLiab?(balance2[i]?.otherCurrentLiab|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr class="collapse total_liabilities" data-toggle="collapse" data-target=".non_liabilities"
+                            role="button" aria-expanded="true" aria-controls="">
+                            <th style="width: 20%;padding-left: 20px;"> <i class="fa fa-angle-down fa-2x"></i>
+                              <h2>Non-Current Liabilities</h2>
+                            </th>
+                            <td width="23%" *ngFor="let balance of getdata;let i=index">
+                              <span class="widthbox">
+                                {{balance?.NonCurrentLiabilities?(balance?.NonCurrentLiabilities|AmountFormat:2):'N/A'}}</span>
+                              <span class="widthbox" *ngIf="isSuperBalance">
+                                {{balanceGet[i]?.NonCurrentLiabilities?(balanceGet[i]?.NonCurrentLiabilities|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2" *ngIf="isSuperBal1">
+                                {{balance2[i]?.NonCurrentLiabilities?(balance2[i]?.NonCurrentLiabilities|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr class="collapse non_liabilities">
+                            <td class="bor_bgnone" style="width: 20%; padding-left: 40px;">Long Term Debt</td>
+                            <td width="23%" *ngFor="let balance of getdata;let i=index">
+                              <span class="widthbox">
+                                {{balance?.longTermDebt?(balance?.longTermDebt|AmountFormat:2):'N/A'}}</span>
+                              <span class="widthbox" *ngIf="isSuperBalance">
+                                {{balanceGet[i]?.longTermDebt?(balanceGet[i]?.longTermDebt|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2" *ngIf="isSuperBal1">
+                                {{balance2[i]?.longTermDebt?(balance2[i]?.longTermDebt|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr class="collapse non_liabilities">
+                            <td class="bor_bgnone" style="width: 20%; padding-left: 40px;">Other Non-Current Liabilities
+                            </td>
+                            <td width="23%" *ngFor="let balance of getdata;let i=index">
+                              <span class="widthbox">
+                                {{balance?.otherLiab?(balance?.otherLiab|AmountFormat:2):'N/A'}}</span>
+                              <span class="widthbox" *ngIf="isSuperBalance">
+                                {{balanceGet[i]?.otherLiab?(balanceGet[i]?.otherLiab|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2" *ngIf="isSuperBal1">
+                                {{balance2[i]?.otherLiab?(balance2[i]?.otherLiab|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th style="width: 15%;">
+                              <h1>Stockholder Equity</h1>
+                            </th>
+                            <td width="23%" *ngFor="let balance of getdata;let i=index">
+                              <span class="widthbox">
+                                {{balance?.totalStockholderEquity?(balance?.totalStockholderEquity|AmountFormat:2):'N/A'}}</span>
+                              <span class="widthbox" *ngIf="isSuperBalance">
+                                {{balanceGet[i]?.totalStockholderEquity?(balanceGet[i]?.totalStockholderEquity|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2" *ngIf="isSuperBal1">
+                                {{balance2[i]?.totalStockholderEquity?(balance2[i]?.totalStockholderEquity|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th style="width: 15%;">
+                              <h1>Net Tangible Assets</h1>
+                            </th>
+                            <td width="23%" *ngFor="let balance of getdata;let i=index">
+                              <span class="widthbox">
+                                {{balance?.netTangibleAssets?(balance?.netTangibleAssets|AmountFormat:2):'N/A'}}</span>
+                              <span class="widthbox" *ngIf="isSuperBalance">
+                                {{balanceGet[i]?.netTangibleAssets?(balanceGet[i]?.netTangibleAssets|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2" *ngIf="isSuperBal1">
+                                {{balance2[i]?.netTangibleAssets?(balance2[i]?.netTangibleAssets|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th style="width: 15%;">
+                              <h1>Shares Outstanding</h1>
+                            </th>
+                            <td width="23%" *ngFor="let balance of getdata;let i=index">
+                              <span class="widthbox">
+                                {{balance?.commonStock?(balance?.commonStock|AmountFormat:2):'N/A'}}</span>
+                              <span class="widthbox" *ngIf="isSuperBalance">
+                                {{balanceGet[i]?.commonStock?(balanceGet[i]?.commonStock|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2" *ngIf="isSuperBal1">
+                                {{balance2[i]?.commonStock?(balance2[i]?.commonStock|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <!-- BALANCE TABLE END -->
+                      <div class="tab-content ptb" id="myTabContent">
+                        <div class="tab-pane fade show active" id="bannual" role="tabpanel"
+                          aria-labelledby="bannual-tab">
+                          <div class="collapse_warp table-responsive">
+                            <app-financial-data *ngIf="this.model?.company_finance?.BalanceSheet?.Annual"
+                              [data]="this.model?.company_finance?.BalanceSheet?.Annual" PreFix="BalanceAnual">
+                            </app-financial-data>
+                          </div>
+                        </div>
+                        <div class="tab-pane fade " id="bquarterly" role="tabpanel" aria-labelledby="bquarterly-tab">
+                          <div class="collapse_warp table-responsive">
+                            <app-financial-data *ngIf="this.model?.company_finance?.BalanceSheet?.Quarterly"
+                              [data]="this.model?.company_finance?.BalanceSheet?.Quarterly" PreFix="BalanceQuarterly">
+                            </app-financial-data>
+                            <!-- <ng-container
+                              *ngFor="let item of this.model?.company_finance?.Quarterly?.BalanceSheet;let i=index">
+
+                              <div class="collapse_list" data-toggle="collapse" attr.data-target="#qcollapse{{i}}"><i
+                                  class="fa fa-angle-down" aria-hidden="true"></i>{{item?.name}}
+                              </div>
+                              <ul id="qcollapse{{i}}" class="collapse coll-lave1">
+
+                                <li *ngFor="let child of item.children">
+                                  {{child.name}}
+                                </li>
+
+                              </ul>
+                            </ng-container> -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- BALANCE END -->
+
+                    <!-- INCOME START -->
+                    <div class="tab-pane fade three_staptb" id="income" role="tabpanel" aria-labelledby="income-tab"
+                      *ngIf="this.tab_Value == 'income-tab'">
+                      <!-- INCOME TABLE START -->
+                      <table class="table fainens_table new_sheet">
+                        <thead class="year_headedata">
+                          <tr>
+                            <th></th>
+                            <th *ngFor="let income of getincomedata;let i=index" width="19.5%">
+                              <span class="widthbox">{{income?.date | date:'yyyy'}}</span>
+                              <span class="widthbox" *ngIf="this.incomeSym1 != null" (click)="clearbalance()">
+                                <span class="bluebg">{{this.incomeSym1}} <i class="fa fa-close"></i></span>
+                              </span>
+                              <span class="widthbox company_data2" *ngIf="isIncome1">
+                                <span class="bluebg" (click)="clearbala2()">{{this.incomeSym2}}<i
+                                    class="fa fa-close"></i></span>
+                              </span>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <th style="width: 15%;" role="button">
+                              <h1>Revenue</h1>
+                            </th>
+                            <td width="23%" *ngFor="let income of getincomedata;let i=index">
+                              <span class="widthbox">
+                                {{income?.totalRevenue?(income?.totalRevenue|AmountFormat:2):''}}</span>
+                              <span class="widthbox">
+                                {{incomeGet[i]?.totalRevenue?(incomeGet[i]?.totalRevenue|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2">
+                                {{incomeGet2[i]?.totalRevenue?(incomeGet2[i]?.totalRevenue|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th style="width: 15%;" role="button">
+                              <h1>Cost Of Revenue</h1>
+                            </th>
+                            <td width="23%" *ngFor="let income of getincomedata;let i=index">
+                              <span class="widthbox">
+                                {{income?.costOfRevenue?(income?.costOfRevenue|AmountFormat:2):''}}</span>
+                              <span class="widthbox">
+                                {{incomeGet[i]?.costOfRevenue?(incomeGet[i]?.costOfRevenue|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2">
+                                {{incomeGet2[i]?.costOfRevenue?(incomeGet2[i]?.costOfRevenue|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th style="width: 15%;" role="button">
+                              <h1>Gross Profit</h1>
+                            </th>
+                            <td width="23%" *ngFor="let income of getincomedata;let i=index">
+                              <span class="widthbox">
+                                {{income?.grossProfit?(income?.grossProfit|AmountFormat:2):''}}</span>
+                              <span class="widthbox">
+                                {{incomeGet[i]?.grossProfit?(incomeGet[i]?.grossProfit|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2">
+                                {{incomeGet2[i]?.grossProfit?(incomeGet2[i]?.grossProfit|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th style="width: 15%;" role="button">
+                              <h1>Operating Income</h1>
+                            </th>
+                            <td width="23%" *ngFor="let income of getincomedata;let i=index">
+                              <span class="widthbox">
+                                {{income?.OperatingExpenses?(income?.OperatingExpenses|AmountFormat:2):''}}</span>
+                              <span class="widthbox">
+                                {{incomeGet[i]?.OperatingExpenses?(incomeGet[i]?.OperatingExpenses|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2">
+                                {{incomeGet2[i]?.OperatingExpenses?(incomeGet2[i]?.OperatingExpenses|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr data-toggle="collapse" data-target=".operating_expense" role="button"
+                            aria-expanded="false" aria-controls="">
+                            <th style="width: 15%;" class="lavel_06">
+                              <i class="fa fa-angle-down fa-1x"></i>
+                              <h1>Operating Expense</h1>
+                            </th>
+                            <td width="23%" *ngFor="let income of getincomedata;let i=index">
+                              <span class="widthbox"> {{income.sellingGeneralAdministrative +
+                                income.researchDevelopment|AmountFormat:2}}</span>
+                              <span class="widthbox">
+                                {{incomeGet[i]?.sellingGeneralAdministrative?(incomeGet[i]?.sellingGeneralAdministrative|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2">
+                                {{incomeGet2[i]?.sellingGeneralAdministrative?(incomeGet2[i]?.sellingGeneralAdministrative|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr class="collapse operating_expense">
+                            <td class="bor_bgnone" style="width: 20%; padding-left: 20px;">Selling General &
+                              Administrative</td>
+                            <td width="23%" *ngFor="let income of getincomedata;let i=index">
+                              <span class="widthbox">
+                                {{income?.sellingGeneralAdministrative?(income?.sellingGeneralAdministrative|AmountFormat:2):''}}</span>
+                              <span class="widthbox">
+                                {{incomeGet[i]?.sellingGeneralAdministrative?(incomeGet[i]?.sellingGeneralAdministrative|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2">
+                                {{incomeGet2[i]?.sellingGeneralAdministrative?(incomeGet2[i]?.sellingGeneralAdministrative|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr class="collapse operating_expense">
+                            <td class="bor_bgnone" style="width: 20%; padding-left: 20px;">Research & Development</td>
+                            <td width="23%" *ngFor="let income of getincomedata;let i=index">
+                              <span class="widthbox">
+                                {{income?.researchDevelopment?(income?.researchDevelopment|AmountFormat:2):''}}</span>
+                              <span class="widthbox">
+                                {{incomeGet[i]?.researchDevelopment?(incomeGet[i]?.researchDevelopment|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2">
+                                {{incomeGet2[i]?.researchDevelopment?(incomeGet2[i]?.researchDevelopment|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th style="width: 15%;" role="button">
+                              <h1>Total Expense</h1>
+                            </th>
+                            <td width="23%" *ngFor="let income of getincomedata;let i=index">
+                              <span class="widthbox">
+                                {{income?.totalOperatingExpenses?(income?.totalOperatingExpenses|AmountFormat:2):''}}</span>
+                              <span class="widthbox">
+                                {{incomeGet[i]?.totalOperatingExpenses?(incomeGet[i]?.totalOperatingExpenses|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2">
+                                {{incomeGet2[i]?.totalOperatingExpenses?(incomeGet2[i]?.totalOperatingExpenses|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th style="width: 15%;" role="button">
+                              <h1>Net Income</h1>
+                            </th>
+                            <td width="23%" *ngFor="let income of getincomedata;let i=index">
+                              <span class="widthbox"> {{income?.netIncome?(income?.netIncome|AmountFormat:2):''}}</span>
+                              <span class="widthbox">
+                                {{incomeGet[i]?.netIncome?(incomeGet[i]?.netIncome|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2">
+                                {{incomeGet2[i]?.netIncome?(incomeGet2[i]?.netIncome|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th style="width: 15%;" role="button">
+                              <h1>Earnings Per Share</h1>
+                            </th>
+                            <td width="23%" *ngFor="let income of getincomedata;let i=index">
+                              <span class="widthbox"> {{income.EarningsPerShare|AmountFormat:2}}</span>
+                              <span class="widthbox">
+                                {{incomeGet[i]?.EarningsPerShare?(incomeGet[i]?.EarningsPerShare|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2">
+                                {{incomeGet2[i]?.EarningsPerShare?(incomeGet2[i]?.EarningsPerShare|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <!-- INCOME TABLE END -->
+
+                      <div class="tab-content ptb" id="imyTabContent">
+                        <div class="tab-pane fade show active" id="iannual" role="tabpanel"
+                          aria-labelledby="iannual-tab">
+                          <div class="collapse_warp table-responsive">
+                            <app-financial-data *ngIf="this.model?.company_finance?.IncomeStatement?.Annual"
+                              [data]="this.model?.company_finance?.IncomeStatement?.Annual"
+                              PreFix="IncomeStatementAnnual"></app-financial-data>
+                          </div>
+                        </div>
+                        <div class="tab-pane fade" id="iquarterly" role="tabpanel" aria-labelledby="iquarterly-tab">
+                          <div class="collapse_warp table-responsive">
+                            <app-financial-data *ngIf="this.model?.company_finance?.IncomeStatement?.Quarterly"
+                              [data]="this.model?.company_finance?.IncomeStatement?.Quarterly"
+                              PreFix="IncomeStatementQuarterly"></app-financial-data>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- INCOME END -->
+
+                    <!-- CASHFLOW START -->
+                    <div class="tab-pane fade three_staptb" id="cashflow" role="tabpanel" aria-labelledby="cashflow-tab"
+                      *ngIf="this.tab_Value == 'cashflow-tab'">
+                      <!-- CASH FLOW TABLE START -->
+                      <table class="table fainens_table new_sheet">
+                        <thead class="year_headedata">
+                          <tr>
+                            <th></th>
+                            <th *ngFor="let cashflow of getcashdata;let i=index" width="19.5%">
+                              <span class="widthbox"> {{cashflow?.date | date:'yyyy'}} </span>
+                              <span class="widthbox" *ngIf="this.cashsym1 != null">
+                                <span class="bluebg" (click)="clearbalance()">{{this.cashsym1}}<i
+                                    class="fa fa-close"></i></span>
+                              </span>
+                              <span class="widthbox company_data2" *ngIf="iscashFlow1">
+                                <span class="bluebg" (click)="clearbala2()">{{this.cashsym2}}<i
+                                    class="fa fa-close"></i></span>
+                              </span>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr class="deta_lavel_first">
+                            <th style="width: 15%;" class="lavel_01 " role="button">
+                              <h1>Operating Cash Flow</h1>
+                            </th>
+                            <td width="23%" *ngFor="let cashflow of getcashdata;let i=index">
+                              <span class="widthbox">
+                                {{cashflow?.totalCashFromOperatingActivities?(cashflow?.totalCashFromOperatingActivities|AmountFormat:2):''}}</span>
+                              <span class="widthbox" *ngIf="iscashFlow" (click)="clearbalance()">
+                                {{cashflowGet[i]?.totalCashFromOperatingActivities?(cashflowGet[i]?.totalCashFromOperatingActivities|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2" *ngIf="iscashFlow1">
+                                {{cashflowGet2[i]?.totalCashFromOperatingActivities?(cashflowGet2[i]?.totalCashFromOperatingActivities|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th style="width: 15%;" class="lavel_01 " role="button">
+                              <h1>Investing Cash Flow</h1>
+                            </th>
+                            <td width="23%" *ngFor="let cashflow of getcashdata;let i=index">
+                              <span class="widthbox">
+                                {{cashflow?.totalCashflowsFromInvestingActivities?(cashflow?.totalCashflowsFromInvestingActivities|AmountFormat:2):''}}</span>
+                              <span class="widthbox" *ngIf="iscashFlow">
+                                {{cashflowGet[i]?.totalCashflowsFromInvestingActivities?(cashflowGet[i]?.totalCashflowsFromInvestingActivities|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2" *ngIf="iscashFlow1">
+                                {{cashflowGet2[i]?.totalCashflowsFromInvestingActivities?(cashflowGet2[i]?.totalCashflowsFromInvestingActivities|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th style="width: 15%;" class="lavel_01 " role="button">
+                              <h1>Financiing Cash Flow</h1>
+                            </th>
+                            <td width="23%" *ngFor="let cashflow of getcashdata;let i=index">
+                              <span class="widthbox">
+                                {{cashflow?.totalCashFromFinancingActivities?(cashflow?.totalCashFromFinancingActivities|AmountFormat:2):''}}</span>
+                              <span class="widthbox" *ngIf="iscashFlow">
+                                {{cashflowGet[i]?.totalCashFromFinancingActivities?(cashflowGet[i]?.totalCashFromFinancingActivities|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2" *ngIf="iscashFlow1">
+                                {{cashflowGet2[i]?.totalCashFromFinancingActivities?(cashflowGet2[i]?.totalCashFromFinancingActivities|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr class="border-bottom">
+                            <th style="width: 15%;" class="lavel_01 " role="button">
+                              <h1>Capital Expenditure</h1>
+                            </th>
+                            <td width="23%" *ngFor="let cashflow of getcashdata;let i=index">
+                              <span class="widthbox">
+                                {{cashflow?.capitalExpenditures?(cashflow?.capitalExpenditures|AmountFormat:2):''}}</span>
+                              <span class="widthbox" *ngIf="iscashFlow">
+                                {{cashflowGet[i]?.capitalExpenditures?(cashflowGet[i]?.capitalExpenditures|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2" *ngIf="iscashFlow1">
+                                {{cashflowGet2[i]?.capitalExpenditures?(cashflowGet2[i]?.capitalExpenditures|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                          <tr class="border-bottom">
+                            <th style="width: 15%;" class="lavel_01 " role="button">
+                              <h1>Free Cash Flow</h1>
+                            </th>
+                            <td width="23%" *ngFor="let cashflow of getcashdata;let i=index">
+                              <span class="widthbox">
+                                {{cashflow?.FreeCashFlow?(cashflow?.FreeCashFlow|AmountFormat:2):''}}</span>
+                              <span class="widthbox" *ngIf="iscashFlow">
+                                {{cashflowGet[i]?.FreeCashFlow?(cashflowGet[i]?.FreeCashFlow|AmountFormat:2):''}}</span>
+                              <span class="widthbox company_data2" *ngIf="iscashFlow1">
+                                {{cashflowGet2[i]?.FreeCashFlow?(cashflowGet2[i]?.FreeCashFlow|AmountFormat:2):''}}</span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <!-- CASH FLOW TABLE START -->
+                      <div class="tab-content ptb" id="cmyTabContent">
+                        <div class="tab-pane fade show active" id="cannual" role="tabpanel"
+                          aria-labelledby="cannual-tab">
+                          <div class="collapse_warp table-responsive">
+                            <app-financial-data *ngIf="this.model?.company_finance?.CashFlow?.Annual"
+                              [data]="this.model?.company_finance?.CashFlow?.Annual" PreFix="CashFlowAnnual">
+                            </app-financial-data>
+                          </div>
+                        </div>
+                        <div class="tab-pane fade" id="cquarterly" role="tabpanel" aria-labelledby="cquarterly-tab">
+                          <div class="collapse_warp table-responsive">
+                            <app-financial-data *ngIf="this.model?.company_finance?.CashFlow?.Quarterly"
+                              [data]="this.model?.company_finance?.CashFlow?.Quarterly" PreFix="CashFlowQuarterly">
+                            </app-financial-data>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- CASHFLOW  END -->
+                  </div>
+                </div>
+
+                <!-- ABOUT STRAT -->
+                <div class="tab-pane fade" id="about" role="tabpanel" aria-labelledby="about-tab"
+                  *ngIf="this.parentTabValue == 4">
+                  <div class="annual_reportbtn add_watltbtn" *ngIf="mydata?.annual_report?.length > 0">
+                    <button type="button" class="btn btn-outline-success">
+                      Annual Reports</button>
+                    <ul class="watchlistname_list" *ngIf="mydata?.annual_report?.length > 0">
+                      <li *ngFor="let list of mydata?.annual_report; let i = index"
+                        (click)="gotoAnnualReport(this.mydata.annual_report_file , list)">
+                        <a href="javascript:void(0);">{{list}}</a>
+                      </li>
+                    </ul>
+                  </div>
+                  <table class="table table-bordered">
+                    <tr>
+                      <th colspan="2">
+                        {{this.mydata?.securityName}}
+                      </th>
+                    </tr>
+                    <tr>
+                      <th>
+                        Name:
+                      </th>
+                      <td>
+                        {{this.mydata?.companyName}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
+                        Industry:
+                      </th>
+                      <td>
+                        {{this.mydata?.industry}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
+                        Sector:
+                      </th>
+                      <td>
+                        {{this.mydata?.sector}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
+                        Description:
+                      </th>
+                      <td>
+                        {{this.mydata?.description}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
+                        CEO:
+                      </th>
+                      <td>
+                        {{this.mydata?.CEO}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
+                        Employees:
+                      </th>
+                      <td>
+                        {{this.mydata?.employees | number}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
+                        Address:
+                      </th>
+                      <td>
+                        {{this.mydata?.address}} {{this.mydata?.address2}}
+                        <br />
+                        {{this.mydata?.city}} {{this.mydata?.state}} {{this.mydata?.zipCode}}
+                        <br />
+                        {{this.mydata?.country}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
+                        Phone:
+                      </th>
+                      <td>
+                        {{this.mydata?.phone}}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
+                        Website:
+                      </th>
+                      <td>
+                        <a target="_blank" [href]="this.mydata?.website">
+                          {{this.mydata?.website.slice(12)}}
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+                  <tr>
+                    <th class="Key_leader_css">Key Leaders:</th>
+                  </tr>
+                  <table class="table borderless">
+                    <thead>
+                      <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Title</th>
+                        <th class="text-right">Pay</th>
+                        <th class="text-right">Age</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let keyItem of keyitem">
+                        <td>{{keyItem?.name}}</td>
+                        <td>{{keyItem?.title}}</td>
+                        <td align="right">
+                          {{keyItem?.pay?(keyItem?.pay | AmountFormat: 2):'N/A'}}
+                        </td>
+                        <td align="right">
+                          {{keyItem?.age? ""+ (keyItem?.age | number : ''):'N/A'}}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <!-- ABOUT END -->
+
+                <!-- CHART STRAT -->
+                <div class="tab-pane fade" id="chart" role="tabpanel" aria-labelledby="chart-tab">
+                  <div class="cp_chart">
+                    <!-- TradingView Widget BEGIN -->
+                    <div class="tradingview-widget-container">
+                      <div id="tradingview_ceb0f2"></div>
+                    </div>
+                    <!-- TradingView Widget END -->
+                  </div>
+                </div>
+                <!-- CHART END -->
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 hhh" *ngIf="this.showSimilarDiv">
+            <h4 class="symbol_similar" *ngIf="similarItems.length > 0">
+              <strong>Similar To {{this.SymbolSocketdata?.symbol ?this.SymbolSocketdata?.symbol:'N/A'}}:</strong>
+              <!-- {{this.SymbolSocketdata?.symbol ?this.SymbolSocketdata?.symbol:'N/A'}} -->
+            </h4>
+            <table class="table table_similar">
+              <tbody>
+                <tr *ngFor="let similarItem of similarItems">
+                  <th>
+                    <a style="cursor: pointer;text-decoration: none;color: #00389d;"
+                      [routerLink]="['/company-profile', similarItem?.symbol]">
+                      <strong class="d-block">{{similarItem?.symbol}}</strong>
+                    </a>
+                    <small>{{similarItem?.companyName}}</small>
+                  </th>
+                  <td>
+                    <span
+                      [ngClass]="{'text-success': (similarItem?.changePercent >  0), 'text-warning': (similarItem?.changePercent <  0)}">
+                      {{similarItem?.changePercent > 0? '': ''}}{{(similarItem?.changePercent ||
+                      similarItem?.changePercent == 0) ? ((similarItem?.changePercent * 100) | number : '1.2-2' ):
+                      'N/A'}}%
+                    </span>
+                  </td>
+                  <td>
+                    <span
+                      [ngClass]="{'text-success': (similarItem?.change >  0), 'text-warning': (similarItem?.change <  0)}">{{similarItem?.change?
+                      "$"+ (similarItem?.change | number : '.2-2'):'N/A'}}
+                    </span>
+                  </td>
+                  <td style="color: #444242;">
+                    <span>{{similarItem?.latestPrice?
+                      "$"+ (similarItem?.latestPrice | number : '.2-2'):'N/A'}}</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-md-4 hhh" *ngIf="!this.showSimilarDiv && this.parentTabValue !== 2">
+            <h4 class="symbol_similar" *ngIf="similarItems.length > 0">
+              <strong>Similar To {{this.SymbolSocketdata?.symbol ?this.SymbolSocketdata?.symbol:'N/A'}}:</strong>
+              <!-- {{this.SymbolSocketdata?.symbol ?this.SymbolSocketdata?.symbol:'N/A'}} -->
+            </h4>
+            <table class="table table_similar">
+              <tbody>
+                <tr *ngFor="let similarItem of similarItems">
+                  <th>
+                    <a style="cursor: pointer;text-decoration: none;color: #00389d;"
+                      [routerLink]="['/company-profile', similarItem?.symbol]">
+                      <strong class="d-block">{{similarItem?.symbol}}</strong>
+                    </a>
+                    <small>{{similarItem?.companyName}}</small>
+                  </th>
+                  <td>
+                    <span
+                      [ngClass]="{'text-success': (similarItem?.changePercent >  0), 'text-warning': (similarItem?.changePercent <  0)}">
+                      {{similarItem?.changePercent > 0? '': ''}}{{(similarItem?.changePercent ||
+                      similarItem?.changePercent == 0) ? ((similarItem?.changePercent * 100) | number : '1.2-2' ):
+                      'N/A'}}%
+                    </span>
+                  </td>
+                  <td>
+                    <span
+                      [ngClass]="{'text-success': (similarItem?.change >  0), 'text-warning': (similarItem?.change <  0)}">{{similarItem?.change?
+                      "$"+ (similarItem?.change | number : '.2-2'):'N/A'}}
+                    </span>
+                  </td>
+                  <td style="color: #444242;">
+                    <span>{{similarItem?.latestPrice?
+                      "$"+ (similarItem?.latestPrice | number : '.2-2'):'N/A'}}</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="message_btn_fx">
+  <button class="message_btn" type="button" data-toggle="modal" (click)="feedbackInput = '';"
+    data-target="#message_bottom" (click)="gotoLoginPage()">
+    <img src="../../assets/img/asset.png">
+  </button>
+</div>
+
+<div class="modal fade add_queto_modal message_bottom" id="message_bottom" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md mob" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>We’d love to hear from you as we continue to improve our product!</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span><i class="fa fa-times" aria-hidden="true"></i></span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- <form> -->
+        <div class="form_inner">
+          <textarea [(ngModel)]="feedbackInput" class="form-control"
+            placeholder="Please let us know your thoughts..."></textarea>
+        </div>
+        <div class="add_termactin">
+          <button type="button" data-dismiss="modal" [disabled]="!feedbackInput" aria-label="Close"
+            (click)="saveFeedback()" class="btn btn-success">Submit</button>
+          <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-secondary">Cancel</button>
+        </div>
+        <!-- </form> -->
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="windowchange"></div>
+
+<!-- <div class="container mt-4">
+  <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 ">
+      <div class="d-flex pt-2 pb-2 point_button" (click)="totalAssets()" role="button">
+        <i class="fa fa-chevron-down icon_open" *ngIf="!isIcon" ></i>
+        <i class="fa fa-chevron-up icon_open" *ngIf="isIcon"></i>
+        <span class="H4_open_css">Total Assets</span>
+      </div>
+      <div class="d-flex pt-2 pb-2 pl-3 point_button" *ngIf="isAssets" (click)="currentAssets()">
+        <i class="fa fa-chevron-down icon_open" *ngIf="!isIcon1" ></i>
+        <i class="fa fa-chevron-up icon_open" *ngIf="isIcon1"></i>
+        <span class="H4_open_css">Current Assets</span>
+      </div>
+      <div class="d-flex pt-2 pb-2 pl-4 ml-2" *ngIf="isCurrent">
+        <span class="">Cash</span>
+      </div>
+      <div class="d-flex pt-2 pb-2 pl-4 ml-2" *ngIf="isCurrent">
+        <span class="">Short Term Investments</span>
+      </div>
+      <div class="d-flex pt-2 pb-2 pl-4 ml-2" *ngIf="isCurrent">
+        <span class="">Receivables</span>
+      </div>
+      <div class="d-flex pt-2 pb-2 pl-4 ml-2" *ngIf="isCurrent">
+        <span class="">Inventory</span>
+      </div>
+      <div class="d-flex pt-2 pb-2 pl-4 ml-2" *ngIf="isCurrent">
+        <span class="">Other Current Assets</span>
+      </div>
+      <div class="d-flex pt-2 pb-2 pl-3 point_button" *ngIf="isAssets" (click)="noncurrentAssets()">
+        <i class="fa fa-chevron-down icon_open" *ngIf="!isIcon2" ></i>
+        <i class="fa fa-chevron-up icon_open" *ngIf="isIcon2"></i>
+        <span class="H4_open_css">Non-Current Assets</span>
+      </div>
+      <div class="d-flex pt-2 pb-2 pl-4 ml-2" *ngIf="isnoncurrent">
+        <span class="">Property Plant and Equipmen</span>
+      </div>
+      <div class="d-flex pt-2 pb-2 pl-4 ml-2" *ngIf="isnoncurrent">
+        <span class="">Goodwill</span>
+      </div>
+      <div class="d-flex pt-2 pb-2 pl-4 ml-2" *ngIf="isnoncurrent">
+        <span class="">Intangible Assets</span>
+      </div>
+      <div class="d-flex pt-2 pb-2 pl-4 ml-2" *ngIf="isnoncurrent">
+        <span class="">Long Term Investments</span>
+      </div>
+      <div class="d-flex pt-2 pb-2 pl-4 ml-2" *ngIf="isnoncurrent">
+        <span class="">Other Non-Current Assets</span>
+      </div>
+      <div class="d-flex pt-2 pb-2 point_button" (click)="totalLiabilities()">
+        <i class="fa fa-chevron-down icon_open" *ngIf="!isIcon3" ></i>
+        <i class="fa fa-chevron-up icon_open" *ngIf="isIcon3"></i>
+        <span class="H4_open_css">Total Liabilities</span>
+      </div>
+      <div class="d-flex pt-2 pb-2 pl-3 point_button" *ngIf="isLiabilities" (click)="currentLiabilities()">
+        <i class="fa fa-chevron-down icon_open" *ngIf="!isIcon4" ></i>
+        <i class="fa fa-chevron-up icon_open" *ngIf="isIcon4"></i>
+        <span class="H4_open_css">Current Liabilities</span>
+      </div>
+      <div class="d-flex pt-2 pb-2 pl-4 ml-2" *ngIf="iscurrentLiabilities">
+        <span class="">Accounts Payable</span>
+      </div>
+      <div class="d-flex pt-2 pb-2 pl-4 ml-2" *ngIf="iscurrentLiabilities">
+        <span class="">Other Current Liabilities</span>
+      </div>
+      <div class="d-flex pt-2 pb-2 pl-3 point_button" *ngIf="isLiabilities" (click)="noncurrentLiabilities()">
+        <i class="fa fa-chevron-down icon_open" *ngIf="!isIcon5" ></i>
+        <i class="fa fa-chevron-up icon_open" *ngIf="isIcon5"></i>
+        <span class="H4_open_css">Non-Current Liabilities</span>
+      </div>
+      <div class="d-flex pt-2 pb-2 pl-4 ml-2" *ngIf="isnonLiabilities">
+        <span class="">Long Term Debt</span>
+      </div>
+      <div class="d-flex pt-2 pb-2 pl-4 ml-2" *ngIf="isnonLiabilities">
+        <span class="">Other Non-Current Liabilities</span>
+      </div>
+      <div class="pt-2 pb-2">
+        <span class="H4_open_css">Stockholder Equity</span>
+      </div>
+      <div class="pt-2 pb-2">
+        <span class="H4_open_css">Net Tangible Assets</span>
+      </div>
+      <div class="pt-2 pb-2">
+        <span class="H4_open_css">Shares Outstanding</span>
+      </div>
+    </div>
+  </div>
+</div> -->

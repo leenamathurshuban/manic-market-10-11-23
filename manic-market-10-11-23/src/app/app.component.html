@@ -1,0 +1,7 @@
+<app-header  [isShowLogo]="this.siteConfig.isShowLogo" [isShowSearchBar]="this.siteConfig.isSearchBar"></app-header>
+<app-topfive></app-topfive>
+<app-chatroom></app-chatroom>
+<!-- <app-loader *ngIf="isVisibleLoader"></app-loader> -->
+<router-outlet></router-outlet> 
+<app-footer *ngIf="this.siteConfig.isShowFooter"></app-footer> 
+

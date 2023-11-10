@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>Manic Market </title>
+  <base href="/">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap CSS -->
+  <!-- <meta name="google-signin-client_id" content="354048035191-8ukaqqtur3uresbrboipikt007kakrc0.apps.googleusercontent.com"> -->
+
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css" type="text/css">
+  <link rel="stylesheet" href="/assets/css/owl.carousel.min.css" type="text/css">
+  <link rel="stylesheet" href="/assets/css/owl.theme.default.min.css" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- Include the Bootstrap 4 theme -->
+  <!-- Google Tag Manager -->
+<!-- <script src="https://apis.google.com/js/platform.js" async defer></script> -->
+
+  <script>(function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-MJMTFC3');
+  </script>
+  <!-- End Google Tag Manager -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-C6M9XCZNSN"></script>
+
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-C6M9XCZNSN');
+  </script>
+
+</head>
+
+<body class="mat-typography">
+  <app-root></app-root>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="/assets/js/jquery.min.js"></script>
+  <script src="/assets/js/owl.carousel.min.js"></script>
+  <script src="/assets/js/custom.js"></script>
+  <script src="/assets/js/popper.min.js"></script>
+
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css" type="text/css">
+  <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+  <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+<!-- Mobile Size Search bar Strat -->
+<script>
+  $(document).ready(function () {
+    $(".xs_serachbtn").click(function () {    
+      if (!$("#search-bar").hasClass("mobile_head_sercbox")) {
+        $("#search-bar").addClass("mobile_head_sercbox");
+      }
+      $(".head_sercbox").slideToggle();
+    });
+
+    $(".home-select").click(function() {
+    $(".home_warper").addClass("intro");
+    });
+    $(".sr_backiocn").click(function() {
+      $(".home_warper").removeClass("intro");
+    });
+  });
+	
+	$(window).scroll(function(){
+	  var sticky = $('#header'),
+	    scroll = $(window).scrollTop();
+    if (scroll >=150) sticky.addClass('sticky');
+	  else sticky.removeClass('sticky');
+	});  
+</script>
+
+<script>
+   var divs = ["chatroomFirst", "chatroomSec",];
+    var visibleDivId = null;
+    function divVisibility(divId) {
+      if(visibleDivId === divId) {
+        visibleDivId = null;
+      } else {
+        visibleDivId = divId;
+      }
+      hideNonVisibleDivs();
+    }
+    function hideNonVisibleDivs() {
+      var i, divId, div;
+      for(i = 0; i < divs.length; i++) {
+        divId = divs[i];
+        div = document.getElementById(divId);
+        if(visibleDivId === divId) {
+          div.style.display = "block";
+        } else {
+          div.style.display = "none";
+        }
+      }
+    }
+</script>
+<!-- Chatroom Page Hide and Show End -->
+
+
+
+<!-- New Window Link -->
+<script>document.write('<link href="assets/css/style.css?v=' + Date.now() + '" rel="stylesheet" />');</script>
+
+<noscript>
+  <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MJMTFC3" height="0" width="0"
+    style="display:none;visibility:hidden">
+  </iframe>
+</noscript>
+
+<!-- End Google Tag Manager (noscript) -->
+
+</body>
+</html>

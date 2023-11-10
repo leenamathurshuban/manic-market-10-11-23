@@ -1,0 +1,164 @@
+<div class="main_warper container-fluid">
+  <div class="row">
+    <!-- <div class="col-md-2" id="sidebar_warper">
+        <div class="left_sidebar">
+        </div>
+      </div> -->
+    <div class="main-content col-md-12">
+      <div class="page-content">
+        <div class="email_confirm" *ngIf="confirmemail">
+          <!-- <img src="assets/img/email_confirmation.png"> -->
+          <h1>
+            Welcome to the Manic Market Community!
+          </h1>
+          <p>
+            You should receive a confirmation email within a few minutes. Please click the link in the email to confirm
+            that you are a human!
+          </p>
+          <span>
+            Didn't receive our email?
+          </span>
+          <a href="javascript:void(0);" (click)="this.resendmail()">
+            Resend confirmation email
+          </a>
+        </div>
+        <div *ngIf="!confirmemail" class="login_warp register_warp">
+          <form [formGroup]="frmGroup" (ngSubmit)="onSubmit()" accept-charset="utf-8">
+            <div class="login_head">
+              <div class="login_head">
+                <h3>Create Account</h3>
+                <p>Create your new Manic Market account</p>
+              </div>
+              <div class="userpci_upld">
+                <i *ngIf="!userimage" class="fa fa-user" aria-hidden="true"></i>
+                <img *ngIf="userimage" [src]="userimage" alt="">
+                <div class="pro_edit">
+                  <i class="fa fa-pencil" aria-hidden="true"><input type="file" name="image"
+                    (change)="uploadFile($event)"> </i>
+                </div>
+                <!-- <img src="assets/img/avatar.png" alt=""> -->
+                <!-- <a href="javascript:void(0);" class="btnpic_edit"><input type="file" name=""> Edit</a> -->
+              </div>
+            </div>
+            <div class="login-body">
+
+
+              <div class="form-group">
+                <label>User Name <a href="javascript:void(0)" class="tooltips">
+                   <span>
+                      <ul style="list-style-type:circle;">
+                        <li> Field must be in 8-20 characters long</li>
+                        <li> no _ or . at the beginning</li>
+                        <li> no __ or _. or ._ or .. inside</li>
+                        <li> no _ or . at the end</li>
+                      </ul>
+                    </span>
+                  </a> <span style="color: red;">* </span>
+                  <span class="help_icon"><i class="fa fa-question" aria-hidden="true"></i></span>
+                </label>
+                <input type="text" name="Username" formControlName="Username" #Username placeholder="Enter user name"
+                  class="form-control" [(ngModel)]="model.Username" />
+                <div class="invalid" style="color: red;"
+                  *ngIf="(frmGroup.get('Username').hasError('required') && frmGroup.get('Username').touched)"> User
+                  Name
+                  is <strong>required</strong>..! </div>
+
+                <div class="invalid" style="color: red;"
+                  *ngIf="(!frmGroup.get('Username').hasError('required') && frmGroup.get('Username').hasError('pattern') && frmGroup.get('Username').touched)">
+                  Invalid Username
+                  <strong>Format</strong>..!
+                  <a href="javascript:void(0)" class="tooltips">? <span>
+                      <ul style="list-style-type:circle;">
+                        <li> Field must be in 8-20 characters long</li>
+                        <li> No _ or . at the beginning</li>
+                        <li> No __ or _. or ._ or .. inside</li>
+                        <li> No _ or . at the end</li>
+                      </ul>
+                    </span>
+                  </a>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>First Name <span style="color: red;">* </span>
+                  <span class="help_icon"><i class="fa fa-question" aria-hidden="true"></i></span>
+                </label>
+                <input type="text" name="First_name" formControlName="First_name" #First_name
+                  placeholder="Enter your First Name" class="form-control" [(ngModel)]="model.First_name">
+                <div class="invalid" style="color: red;"
+                  *ngIf="(frmGroup.get('First_name').hasError('required') && frmGroup.get('First_name').touched)">
+                  First Name is <strong>required</strong>..! </div>
+              </div>
+
+              <div class="form-group">
+                <label>Last Name <span style="color: red;">* </span>
+                  <span class="help_icon"><i class="fa fa-question" aria-hidden="true"></i></span>
+                </label>
+                <input type="text" name="Last_name" formControlName="Last_name" #Last_name
+                  placeholder="Enter your Last Name" class="form-control" [(ngModel)]="model.Last_name">
+                <div class="invalid" style="color: red;"
+                  *ngIf="(frmGroup.get('Last_name').hasError('required') && frmGroup.get('Last_name').touched)">
+                  Last Name is <strong>required</strong>..! </div>
+              </div>
+
+              <div class="form-group">
+                <label>E-mail <span style="color: red;">* </span> </label>
+                <input type="text" name="Email" formControlName="Email" #Email placeholder="Enter your e-mail"
+                  class="form-control" [(ngModel)]="model.Email">
+                <div class="invalid" style="color: red;"
+                  *ngIf="(frmGroup.get('Email').hasError('required') && frmGroup.get('Email').touched)"> E-mail is
+                  <strong>required</strong>..!
+                </div>
+
+                <div class="invalid" style="color: red;"
+                  *ngIf="(frmGroup.get('Email').hasError('email') && frmGroup.get('Email').touched)"> Invalid e-mail
+                  <strong>Format</strong>..!
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Password <span style="color: red;">* </span>
+                  <span class="help_icon"><i class="fa fa-question" aria-hidden="true"></i></span>
+                </label>
+                <input type="password" name="Password" formControlName="Password" #Password
+                  placeholder="Enter your password" class="form-control" [(ngModel)]="model.Password">
+                <div class="invalid" style="color: red;"
+                  *ngIf="(frmGroup.get('Password').hasError('required') && frmGroup.get('Password').touched)">
+                  Password is <strong>required</strong>..! </div>
+                <div class="invalid" style="color: red;"
+                  *ngIf="(!frmGroup.get('Password').hasError('required') &&  frmGroup.get('Password').hasError('PasswordValidationError') && frmGroup.get('Password').touched)">
+                  Password
+                  <strong>mismatched</strong> from Confirm Password Field..!
+                </div>
+              </div>
+
+              <div class="form-group confirm_pass">
+                <label>Confirm Password <span style="color: red;">* </span>
+                  <span class="help_icon"><i class="fa fa-question" aria-hidden="true"></i></span>
+                </label>
+                <input [type]="fieldTextType ? 'text' : 'password'" name="ConfirmPassword"
+                  formControlName="ConfirmPassword" #ConfirmPassword placeholder="Confirm your password"
+                  class="form-control" [(ngModel)]="model.ConfirmPassword">
+                <i class="fa showhide" [ngClass]="{
+                    'fa-eye-slash': !fieldTextType,
+                    'fa-eye': fieldTextType
+                  }" (click)="toggleFieldTextType()" aria-hidden="true"></i>
+                <div class="invalid" style="color: red;"
+                  *ngIf="(frmGroup.get('ConfirmPassword').hasError('required') && frmGroup.get('ConfirmPassword').touched)">
+                  Confirm Password is <strong>required</strong>..! </div>
+
+                <div class="invalid" style="color: red;"
+                  *ngIf="(!frmGroup.get('ConfirmPassword').hasError('required') &&  frmGroup.get('ConfirmPassword').hasError('ConfirmPasswordValidationError') && frmGroup.get('ConfirmPassword').touched)">
+                  Confirm Password <strong>mismatched</strong> from Password Field..!
+                </div>
+              </div>
+              <div class="button-group">
+                <button type="submit" class="btn btn-warning">Create</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

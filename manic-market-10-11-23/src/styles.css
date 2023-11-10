@@ -1,0 +1,21 @@
+@import "~@ng-select/ng-select/themes/default.theme.css";
+/* You can add global styles to this file, and also import other style files */
+.paginate_button .current {
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+  }
+  
+  .paginate_button a:hover:not(.active) {background-color: #ddd;}
+
+  ::ng-deep tr.odd td.dataTables_empty{
+    display: none
+    }
+    .a-no-decore a {
+      text-decoration: none;
+      color: #8e8e8e;
+  }
+
+ 
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

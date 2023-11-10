@@ -1,0 +1,40 @@
+<div class="responseFinacnetab">
+    <div style=" width: 100%;" attr.colspan="{{configModel.ColspanValue}}" class="ct_collapsetoggle response_lavel2"
+        data-toggle="collapse">
+        <div class="responseFinanceInnertab">
+            <div class="td_cell first_cell" style="width: 24%;"
+                (click)="AddRemoveClass($event,'ct_collapse_level'+PreFix)">
+
+                <i *ngIf="childData?.children.length >0" class="fa fa-angle-down" aria-hidden="true"></i>
+
+                {{childData?.name}}
+            </div>
+            <div class="td_cell" style="width: 19%;" *ngIf="configModel.IsShowCol1">{{childData?.Heading1 &&
+                _commonService.checkIsValidNumberString(childData?.Heading1)?
+                (childData?.Heading1 |number):'-'}}</div>
+            <div class="td_cell" style="width: 19%;" *ngIf="configModel.IsShowCol2">{{childData?.Heading2 &&
+                _commonService.checkIsValidNumberString(childData?.Heading2)?
+                (childData?.Heading2 |number):'-'}}</div>
+            <div class="td_cell" style="width: 19%;" *ngIf="configModel.IsShowCol3">{{childData?.Heading3 &&
+                _commonService.checkIsValidNumberString(childData?.Heading3)?
+                (childData?.Heading3 |number):'-'}}</div>
+            <div class="td_cell" style="width: 19%;" *ngIf="configModel.IsShowCol4">{{childData?.Heading4 &&
+                _commonService.checkIsValidNumberString(childData?.Heading4)?
+                (childData?.Heading4 |number):'-'}}</div>
+            <div class="td_cell" style="width: 19%;" *ngIf="configModel.IsShowCol5">{{childData?.Heading5 &&
+                _commonService.checkIsValidNumberString(childData?.Heading5)?
+                (childData?.Heading5 |number):'-'}}</div>
+        </div>
+
+
+
+        <div style="margin-left: 10px;" *ngFor="let child of this.childData?.children ; let childIndex=index"
+            class="ct_collapse collapse response_lavel2" id="ct_collapse_level{{PreFix}}">
+
+            <app-financial-level-data [PreFix]="PreFix+'_Subchildtab_'+childIndex" [childData]="child"
+                [configModel]="configModel">
+            </app-financial-level-data>
+
+        </div>
+    </div>
+</div>

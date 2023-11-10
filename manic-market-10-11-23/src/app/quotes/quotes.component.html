@@ -1,0 +1,299 @@
+<div class="main_warper container">
+  <div class="row justify-content-center">
+    <div class="main-content col-md-12 my_watchlist_main">
+      <div class="page-content quotes">
+        <div *ngIf="isSuperUser && commonService.adminQuote" class="row search_quote-head">
+          <div class="col-md-4">
+            <h2 class="page-title">Admin - Quotes</h2>
+          </div>
+          <div class="col-md-6">
+            <div class="search_quote finance">
+              <i (click)="searchQuote()" class="fa fa-search"></i>
+              <input [(ngModel)]="searhedElement" (keyup.enter)="searchQuote()" type="text"
+                placeholder="Search Quotes">
+                <div *ngIf="isSuperUser && commonService.adminQuote"><button type="button" (click)="clearFilter()" class="btn_clear"> <i class="fa fa-close"></i></button></div>
+            </div>
+            <div class="text-right">
+              <button (click)="explorebtn()" type="button" class="btn btn-primary">Explore </button>
+              <button type="button" class="btn btn-primary"
+              (click)="showliked(this.showlikeddata)"> Favorite </button>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="add_btn_top">
+              <button type="button" data-toggle="modal" data-target="#add_quotes">+</button>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="isSuperUser && !commonService.adminQuote" class="row search_quote-head">
+          <div class="col-md-6">
+            <h2 class="page-title">Business and Investing Quotes</h2>
+          </div>
+          <div class="col-md-6">
+            <div class="search_quote finance">
+              <i (click)="searchQuote()" class="fa fa-search"></i>
+              <input [(ngModel)]="searhedElement" (keyup.enter)="searchQuote()" type="text"
+                placeholder="Search Quotes">
+                <div *ngIf="isSuperUser && !commonService.adminQuote"><button type="button" (click)="clearFilter()" class="btn_clear"> <i class="fa fa-close"></i></button></div>
+            </div>
+            <div class="text-right">
+              <button (click)="explorebtn()" type="button" class="btn btn-primary">Explore </button>
+              <button type="button" class="btn btn-primary"
+              (click)="showliked(this.showlikeddata)"> Favorite </button>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!isSuperUser && searhedLabel" class="row search_quote-head">
+          <div class="col-md-6">
+            <h2 class="page-title">Business and Investing Quotes</h2>
+          </div>
+          <div class="col-md-6">
+            <div class="search_quote finance">
+              <i (click)="searchQuote()" class="fa fa-search"></i>
+              <input [(ngModel)]="searhedElement" (keyup.enter)="searchQuote()" type="text"
+                placeholder="Search Quotes">
+                <div *ngIf="!isSuperUser && searhedLabel"><button type="button" (click)="clearFilter()" class="btn_clear"> <i class="fa fa-close"></i></button></div>
+            </div>
+            <div class="text-right">
+              <button (click)="explorebtn()" type="button" class="btn btn-primary">Explore </button>
+              <button type="button" class="btn btn-primary"
+              (click)="showliked(this.showlikeddata)"> Favorite </button>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!isSuperUser && !searhedLabel" class="row search_quote-head">
+          <div class="col-md-6">
+            <h2 class="page-title">Business and Investing Quotes</h2>
+          </div>
+          <div class="col-md-6">
+            <div class="search_quote finance">
+              <i (click)="searchQuote()" class="fa fa-search"></i>
+              <input [(ngModel)]="searhedElement" (keyup.enter)="searchQuote()" type="text"
+                placeholder="Search Quotes">
+                <div *ngIf="!isSuperUser && searhedLabel"><button type="button" (click)="clearFilter()" class="btn_clear"> <i class="fa fa-close"></i></button></div>
+            </div>
+            <div class="text-right">
+              <button (click)="explorebtn()" type="button" class="btn btn-primary">Explore </button>
+              <button type="button" class="btn btn-primary"
+              (click)="showliked(this.showlikeddata)"> Favorite </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="quotes_contant_main">
+          <!-- <div class="row">
+            <div class="col-md-12 text-right">
+              <a href="javascript:void(0);" [ngClass]="this.showlikeddata ? 'active all_likedbtn' : 'all_likedbtn'"
+                (click)="showliked(this.showlikeddata)">Show Liked Quotes
+                <span>
+                   <i class="fa fa-thumbs-o-up" aria-hidden="true" *ngIf="!this.showlikeddata"></i>
+                  <i class="fa fa-thumbs-up" aria-hidden="true" *ngIf="this.showlikeddata"></i>
+                  <img class="ss" src="../../assets/img/money-bag.png" alt="" *ngIf="this.showlikeddata">
+                      <img class="" src="../../assets/img/money-bag_greay.png" alt="" *ngIf="!this.showlikeddata">
+                </span>
+              </a>
+            </div>
+          </div> -->
+          <div class="masonry_row">
+            <div *ngFor="let item of quoteList; let i = index" class="masonry_item">
+              <div class="quotes_box_cnt">
+                <div *ngIf="!commonService.adminQuote"
+                  [ngClass]="item.liked ? 'active quotes_boxbottom' : 'quotes_boxbottom'">
+                  <span>
+                    <span>
+                      {{item.likes}} 
+                      <!-- <i class="fa fa-thumbs-up" aria-hidden="true" *ngIf="item.liked"
+                        (click)="likeingQuote(item.id)"></i>
+                      <i class="fa fa-thumbs-o-up" aria-hidden="true" *ngIf="!item.liked"
+                        (click)="likeingQuote(item.id)"></i> -->
+                      <img class="ss" src="../../assets/img/money-bag.png" alt="" *ngIf="item.liked" (click)="likeingQuote(item.id)">
+                      <img class="" src="../../assets/img/money-bag_greay.png" alt="" *ngIf="!item.liked" (click)="likeingQuote(item.id)">
+                    </span>
+                    <span *ngIf="likeddata.id === item.id">{{likeddata?.message}}</span>
+                  </span>
+                </div>
+                <p [innerHtml]='item.quote'>“{{item.quote}}”</p>
+                <span>- {{item.author}}</span>
+                <!-- <a [href]="item.source_url" target="_blank">{{item.source_text}}</a> -->
+                <a *ngIf="item.is_video" [href]="item.source_url" target="_blank">
+                  <img class="svg_icon mr-2" src="../../assets/img/SVG/video_icon.svg" >{{item.source_text}}
+                </a>
+                <a *ngIf="!item.is_video" [href]="item.source_url" target="_blank">
+                  <img class="svg_icon mr-2" src="../../assets/img/SVG/book_icon.svg" >{{item.source_text}}
+                </a>
+                <button *ngIf="isSuperUser && commonService.adminQuote" (click)="getEditableContent(item)"
+                  class="edit_btn" type="button" data-toggle="modal" data-target="#edit_quotes">
+                  <i class="fa fa-pencil" aria-hidden="true"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade add_queto_modal" id="add_quotes" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Add New Quote</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span><i class="fa fa-times" aria-hidden="true"></i></span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- <form> -->
+        <div class="form_inner">
+          <!-- <textarea [(ngModel)]="newQuote.quote" class="form-control" placeholder="Quote...."></textarea>
+          <p *ngIf="adderror?.quote" class="modal_error_q">
+            {{adderror?.quote}}
+          </p> -->
+          <ckeditor [(ngModel)]="newQuote.quote" class="form-control ckeditor" placeholder="Quote...."></ckeditor>
+          <p *ngIf="adderror?.quote" class="modal_error_q">
+            {{adderror?.quote}}
+          </p>
+          <input [(ngModel)]="newQuote.author" class="form-control" placeholder="Author">
+          <p *ngIf="adderror?.author" class="modal_error_q">
+            {{adderror?.author}}
+          </p>
+          <input [(ngModel)]="newQuote.source_text" class="form-control" placeholder="Source text">
+          <p *ngIf="adderror?.source_text" class="modal_error_q">
+            {{adderror?.source_text}}
+          </p>
+          <input [(ngModel)]="newQuote.source_url" class="form-control" placeholder="Source URL">
+          <p *ngIf="adderror?.source_url" class="modal_error_q">
+            {{adderror?.source_url}}
+          </p>
+        </div>
+        <div class="publrs_datawarp_quote">
+          <ng-container>
+            <div class="publrs_dataitem">
+              <label class="switch">
+                <input type="checkbox" [(ngModel)]="newQuote.is_video"/>
+                <span class="slider round"></span>
+              </label>
+              <span>
+                Is Video
+              </span>
+            </div>
+          </ng-container>
+        </div>
+        <div class="add_termactin">
+          <button type="button"
+            [disabled]="!newQuote.quote && !newQuote.author && !newQuote.source_text && !newQuote.source_url"
+            aria-label="Close" (click)="addNewQuote()" class="btn btn-success">Submit</button>
+          <button id="closeadd" data-dismiss="modal" aria-label="Close" type="button"
+            class="btn btn-secondary">Cancel</button>
+        </div>
+        <!-- </form> -->
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade add_queto_modal" id="edit_quotes" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Edit Quote</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="editclose">
+          <span><i class="fa fa-times" aria-hidden="true"></i></span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- <form> -->
+        <div class="form_inner">
+          <!-- <textarea [(ngModel)]="editQuote.quote" class="form-control" placeholder="Quote...."></textarea>
+          <p *ngIf="editerror?.quote" class="modal_error_q">
+            {{editerror?.quote}}
+          </p> -->
+          <ckeditor [(ngModel)]="editQuote.quote" class="form-control" placeholder="Quote...."></ckeditor>
+          <p *ngIf="editerror?.quote" class="modal_error_q">
+            {{editerror?.quote}}
+          </p>
+          <input [(ngModel)]="editQuote.author" class="form-control" placeholder="Author">
+          <p *ngIf="editerror?.author" class="modal_error_q">
+            {{editerror?.author}}
+          </p>
+          <input [(ngModel)]="editQuote.source_text" class="form-control" placeholder="Source text">
+          <p *ngIf="editerror?.source_text" class="modal_error_q">
+            {{editerror?.source_text}}
+          </p>
+          <input [(ngModel)]="editQuote.source_url" class="form-control" placeholder="Source URL">
+          <p *ngIf="editerror?.source_url" class="modal_error_q">
+            {{editerror?.source_url}}
+          </p>
+        </div>
+        <div class="publrs_datawarp_quote">
+          <ng-container>
+            <div class="publrs_dataitem">
+              <label class="switch">
+                <input type="checkbox" [(ngModel)]="editQuote.is_video"/>
+                <span class="slider round"></span>
+              </label>
+              <span>
+                Is Video
+              </span>
+            </div>
+          </ng-container>
+        </div>
+        <div class="add_termactin">
+          <button type="button" [disabled]="!editQuote.quote && !editQuote.author && !editQuote.source_text"
+            (click)="editingQuote()" class="btn btn-success" aria-label="Close">Save
+            Changes</button>
+          <button type="button" (click)="deleteQuote();" class="btn btn-danger" data-dismiss="modal"
+            aria-label="Close">Delete</button>
+        </div>
+        <!-- </form> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="message_btn_fx">
+  <button class="message_btn" type="button" data-toggle="modal" (click)="feedbackInput = '';"
+    data-target="#message_bottom" (click)="gotoLoginPage()">
+    <img src="../../assets/img/asset.png">
+  </button>
+</div>
+
+<div class="modal fade add_queto_modal message_bottom" id="message_bottom" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md mob" role="document">
+    <div class="modal-content" *ngIf="islogin">
+      <div class="modal-header">
+        <h2>We’d love to hear from you as we continue to improve our product!</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span><i class="fa fa-times" aria-hidden="true"></i></span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form_inner">
+          <textarea [(ngModel)]="feedbackInput" class="form-control"
+            placeholder="Please let us know your thoughts..."></textarea>
+        </div>
+        <div class="add_termactin">
+          <button type="button" data-dismiss="modal" [disabled]="!feedbackInput" aria-label="Close"
+            (click)="saveFeedback()" class="btn btn-success">Submit</button>
+          <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-secondary">Cancel</button>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="modal-content" *ngIf="!islogin">
+      <div class="modal-header">
+        <h2>You are not logged in . You must be first login. </h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span><i class="fa fa-times" aria-hidden="true"></i></span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="add_termactin">
+          <button type="button" data-dismiss="modal" aria-label="Close" [routerLink]="['/login']"
+            class="btn btn-success">Login</button>
+        </div>
+      </div>
+    </div> -->
+  </div>
+</div>

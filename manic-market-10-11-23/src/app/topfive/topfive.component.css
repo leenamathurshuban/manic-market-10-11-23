@@ -1,0 +1,25 @@
+/* .textarea {
+    position:relative;
+    right: 1%;
+    top: 60px;
+ } */
+ 
+.textarea .grabber{
+    content: '';
+    position: absolute;
+    right: 0;
+    margin-right: -10px;
+    cursor: e-resize;
+    height: 100%;
+    width: 9px;
+    top: 0;
+    border-top: 1px solid #f1f1f1;
+    overflow: hidden;
+    background-color: #eff0f1;
+    background-image: url('../../assets/img/resize_dots.png'),none;
+    background-position: 0px 50%;
+    background-size: initial;
+    background-repeat: no-repeat;
+    background-size: 57%;
+ }
+ 

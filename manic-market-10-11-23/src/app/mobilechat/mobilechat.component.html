@@ -1,0 +1,99 @@
+<div class="chatroom mobilechat">
+    <div id="chatroomFirst">
+        <div class="chatroom_head_2">
+            <strong>
+                Chat  ({{ loginCount }})
+            </strong>
+            <button mat-icon-button [matMenuTriggerFor]="menu" class="mat_icon_btn">
+                <mat-icon>more_horiz</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item onclick="divVisibility('chatroomSec');">
+                    <mat-icon class="icon_css_new">person_outline</mat-icon>
+                    <span>Participants</span>
+                </button>
+                <button mat-menu-item (click)="onclick()">
+                    <mat-icon class="icon_css_new">query_builder</mat-icon>
+                    <span>Toggle timestamps </span>
+                </button>
+                <button mat-menu-item class="" type="button" data-toggle="modal" (click)="feedbackInput = ''"
+                    data-target="#message_bottom" (click)="gotoLoginPage()">
+                        <mat-icon class="icon_css_new">sms</mat-icon>
+                        <span>Send Feedback</span>
+                </button>
+            </mat-menu>
+        </div>
+        <div [ngClass]="this.login ? 'chathistry' : 'chathistry chathistry_blur'" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+            <div *ngFor="let item of chatdata" class="chat_item">
+                <img class="ct_userpic" *ngIf="!item.image" src="../../assets/img/money-bag.png" alt="">
+                <img class="ct_userpic" *ngIf="item.image" [src]="_userDetail.image" alt="">
+                <span class="ct_timeshow" *ngIf="showTime">{{item.create_at | date:'shortTime'}} </span>
+                <span class="ct_username">{{item.username}} </span>
+                <span class="ct_usermsg" [innerHTML]="item.message"></span>
+            </div>
+        </div>
+        <div *ngIf="this.login" class="msg_wrttingbox">
+            <input autofocus type="text" maxlength="250" (keyup)="inputchange($event)" [value]="message" (keyup.enter)="messagesend()" />
+            <a href="javascript:void(0)" class="sent_btn"> <i class="fa fa-paper-plane" aria-hidden="true" (click)="messagesend()"></i></a>
+        </div>
+    </div>
+    <div id="chatroomSec" style="display: none;">
+        <div class="chatroom_head_2">
+            <div onclick="divVisibility('chatroomFirst');">
+                <mat-icon class="icon_arrow">arrow_back</mat-icon>
+                <span class="arrow_back_span">Participants</span>
+            </div>
+        </div>
+        <div class="chatuserlist">
+            <div *ngFor="let itemchat of usersCount" class="chat_item mt-2">
+                <div>
+                    <img class="ct_userpic" *ngIf="!itemchat.image" src="../../assets/img/money-bag.png" alt="">
+                    <img class="ct_userpic" *ngIf="itemchat.image" [src]="itemchat.image" alt="">
+                    <span class="ct_username">{{itemchat.username}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="!this.login" class="login_div_css d-flex">
+        <h4 class="text-white login_h4">Login to join the party!</h4>
+        <button type="button" data-dismiss="modal" [routerLink]="['/login']" class="btn login_btn_css rounded-0">Login</button>
+    </div>
+</div>
+<div class="modal fade add_queto_modal message_bottom" id="message_bottom" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md mob" role="document">
+    <div class="modal-content" *ngIf="login">
+      <div class="modal-header">
+        <h2>We’d love to hear from you as we continue to improve our product!</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span><i class="fa fa-times" aria-hidden="true"></i></span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form_inner">
+          <textarea [(ngModel)]="feedbackInput" class="form-control"
+            placeholder="Please let us know your thoughts..."></textarea>
+        </div>
+        <div class="add_termactin">
+          <button type="button" data-dismiss="modal" [disabled]="!feedbackInput" aria-label="Close"
+            (click)="saveFeedback()" class="btn btn-success">Submit</button>
+          <button type="button" data-dismiss="modal" aria-label="Close" class="btn btn-secondary">Cancel</button>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="modal-content" *ngIf="!login">
+      <div class="modal-header">
+        <h2>You are not logged in . You must be first login. </h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span><i class="fa fa-times" aria-hidden="true"></i></span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="add_termactin">
+          <button type="button" data-dismiss="modal" aria-label="Close" [routerLink]="['/login']"
+            class="btn btn-success">Login</button>
+        </div>
+      </div>
+    </div> -->
+  </div>
+</div>

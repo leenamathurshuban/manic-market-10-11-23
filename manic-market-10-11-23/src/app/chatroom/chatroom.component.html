@@ -1,0 +1,154 @@
+<div class="chatroom">
+    <div *ngIf="showchat">
+        <div id="chatroomFirst">
+            <div class="chatroom_head_2">
+                <strong>
+                    Chat ({{loginCount}})
+                </strong>
+                <div class="ml-3" (click)="showchat = false">
+                    <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                    <span class="ml-1" style="font-weight: bold;font-size: 14px;">Hide Chat</span>
+                </div>
+                <button mat-icon-button [matMenuTriggerFor]="menu" class="mat_icon_btn">
+                    <mat-icon>more_horiz</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item onclick="divVisibility('chatroomSec');">
+                        <mat-icon class="icon_css_new">person_outline</mat-icon>
+                        <span>Participants</span>
+                    </button>
+                    <div>
+                        <button (click)="onclickbtn()" (click)="showRestore = true" mat-menu-item (click)="this.showPortal = true" (click)="showchat = false">
+                            <mat-icon class="icon_css_new">open_in_new</mat-icon>
+                            <span>Pop Out Chat</span>
+                        </button>
+                    </div>
+                    <button mat-menu-item (click)="onclick()">
+                        <mat-icon class="icon_css_new">query_builder</mat-icon>
+                        <span>Toggle timestamps</span>
+                    </button>
+                    <button mat-menu-item class="" type="button" data-toggle="modal" (click)="feedbackInput = '';" data-target="#message_bottom">
+                        <mat-icon class="icon_css_new">sms</mat-icon>
+                        <span>Send Feedback</span>
+                    </button>
+                </mat-menu>
+            </div>
+            <div class="chat-container" [ngClass]="this.login ? 'chathistry' : 'chathistry chathistry_blur'" #chatContainer>
+                <div *ngFor="let item of chatdata" class="chat_item">
+                    <!-- <img class="ct_userpic" [src]="item?.image ? imagepath.url + item?.image : imagepath.defalut"/> -->
+                    <img class="ct_userpic" *ngIf="item?.image" [src]="item?.image"/>
+                    <img class="ct_userpic" *ngIf="!item?.image" src="../../assets/img/money-bag.png"/>
+                    <div class="usermessage">
+                        <span class="ct_timeshow" *ngIf="showTime">{{item.create_at | date:'shortTime'}} </span>
+                        <span class="ct_username">{{item.username}} </span>
+                        <span class="ct_usermsg" [innerHTML]="item.message">{{item.message}}</span>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="this.login" class="msg_wrttingbox">
+                <input autofocus type="text" maxlength="250" (keyup)="inputchange($event)" [value]="message" (keyup.enter)="messagesend()" />
+                <a href="javascript:void(0)" class="sent_btn"> <i class="fa fa-paper-plane" aria-hidden="true" (click)="messagesend()"></i></a>
+            </div>
+        </div>
+        <div id="chatroomSec" style="display: none;">
+            <div class="chatroom_head_2">
+                <div onclick="divVisibility('chatroomFirst');">
+                    <mat-icon class="icon_arrow">arrow_back</mat-icon>
+                    <span class="arrow_back_span">Participants</span>
+                </div>
+            </div>
+            <div class="chatuserlist">
+                <div *ngFor="let item of usersCount" class="chat_item mt-2">
+                    <img class="ct_userpic" *ngIf="!item.image" src="../../assets/img/money-bag.png" alt="">
+                    <img class="ct_userpic" *ngIf="item.image" [src]="item.image" alt="">
+                    <span class="ct_username">{{item.username}}</span>
+                </div>
+            </div>
+            <div class="chat_participant">
+                ({{loginCount}})
+            </div>
+        </div>
+        <div *ngIf="!this.login" class="login_div_css d-flex">
+            <h4 class="text-white login_h4">Login to join the party!</h4>
+            <button type="button" data-dismiss="modal" [routerLink]="['/login']" class="btn login_btn_css rounded-0">Login</button>
+        </div>
+    </div>
+    <ng-container *ngIf="visible" onclick="closeWin()">
+        <div *ngIf="!showchat" (click)="showchat = true" class="chatroom_head">
+            <strong>
+                <i class="fa fa-chevron-up" aria-hidden="true"></i>
+                Chat ({{loginCount}})
+            </strong>
+            <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+        </div>
+        <div *ngIf="showchat" onclick="divVisibility('chatroomFirst');" (click)="showchat = false" class="chatroom_foot">
+            <i class="fa fa-chevron-down" aria-hidden="true"></i>
+            Hide chat
+        </div>
+    </ng-container>
+    <div (click)="this.showPortal = false" (click)="onclickbtn()" (click)="showchat = true" class="chatroom_restore" *ngIf="showRestore" (click)="showRestore = false">
+        <mat-icon class="re-chat_icon">open_in_new</mat-icon>
+        <span class="re-chat_text">Restore Chat</span>
+    </div>
+</div>
+
+<!-- New Browser Window Strat -->
+<window *ngIf="showPortal">
+    <!-- Example single danger button -->
+<div class="newwindow" *ngIf="!psshow">
+    <div class="window_head_2" >
+        <strong>
+            <i class="fa fa-external-link new_window_icon" aria-hidden="true"></i>
+            Top Chat ({{loginCount}})
+        </strong>
+        <!-- new window dropdown option show start -->
+        <div class="dropdown">
+            <i class="fa fa-ellipsis-h dropdown-toggle" type="button" style="font-size:26px;color: #00389d;" id="dropdownMenuButton" data-toggle="dropdown"  ></i>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <div class="dropdown-item" (click)="psShow()">
+                    <i class="fa-regular fa-user"></i>
+                    <span>Participants</span>
+                </div>
+                <div class="dropdown-item" (click)="onclick()">
+                    <i class="fa-regular fa-clock"></i>
+                    <span>Toggle timestamps</span>
+                </div>
+            </div>
+        </div>
+        <!-- new window dropdown option show end -->
+    </div>
+    <div class="windowhistry" #chatContainer *ngIf="!psshow">
+        <div *ngFor="let item of chatdata" class="chat_item">
+            <!-- <img class="ct_userpic" [src]="item?.image ? imagepath.url + item?.image : imagepath.defalut" /> -->
+            <img class="ct_userpic" *ngIf="!item.image" src="../../assets/img/money-bag.png" alt="">
+            <img class="ct_userpic" *ngIf="item.image" [src]="_userDetail.image" alt="">
+            <span class="ct_timeshow_window" *ngIf="showTime">{{item.create_at | date:'shortTime'}} </span>
+            <span class="ct_username">{{item.username}} </span>
+            <span class="ct_usermsg" [innerHTML]="item.message">{{ item.message }}</span>
+        </div>
+    </div>
+    <div *ngIf="this.login" class="msg_wrttingbox">
+        <input autofocus type="text" maxlength="250" (keyup)="inputchange($event)" [value]="message" (keyup.enter)="messagesend()" />
+        <a href="javascript:void(0)" class="sent_btn"> <i class="fa fa-paper-plane" aria-hidden="true" (click)="messagesend()"></i></a>
+    </div>
+    
+</div>
+<!-- new window Participants show start -->
+<div *ngIf="psshow" class="chat_history">
+    <div class="chatuserlist">
+        <div class="back_ico">
+            <i class="fa-solid fa-arrow-left" (click)="psShow()" type="button"></i>
+            <span>Participants</span>
+        </div>
+        <div class="chat_history_box">
+            <div *ngFor="let item of usersCount" class="chat_item mt-2">
+                <img class="ct_userpic" *ngIf="!item.image" src="../../assets/img/money-bag.png" alt="">
+                <img class="ct_userpic" *ngIf="item.image" [src]="item.image" alt="">
+                <span class="ct_username">{{item.username}}</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- new window Participants show end -->
+</window>
+<!-- New Browser Window End -->

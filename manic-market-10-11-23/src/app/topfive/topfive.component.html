@@ -1,0 +1,61 @@
+<div class="textarea" [style.width.px]='width' [ngClass]="edittopname ? 'active topfive_popup' : 'topfive_popup' "
+  cdkDrag [cdkDragDisabled]="edittopname || !dragtopsix" *ngIf="this.login && this.testarray.length > 0">
+  <button type="button" (click)="edittoplist()"
+    [ngClass]="edittopname ? 'selected_top_active edittopfive' : 'edittopfive' ">
+    <i class="fa fa-pencil" aria-hidden="true"></i>
+  </button>
+  <ul #dropListContainer cdkDropListGroup
+    [ngClass]="(width >0 && width <= 360) ? 'drag_xs' : (width >360 && width <= 450) ? 'drag_sm' : (width >451 && width <= 900) ? 'drag_md' : 'drag_lg'  ">
+    <li *ngFor="let item of this.testarray; let i = index;" id="{{'topfiveid'+i}}" cdkDropList [cdkDropListData]="i"
+     >
+      <div cdkDragBoundary=".topfive_popup" cdkDrag [cdkDragDisabled]="!edittopname" [cdkDragData]="i"
+        (cdkDragEntered)="dragEntered($event)" (cdkDragMoved)="dragMoved($event)"
+        (cdkDragDropped)="dragDropped($event)">
+        <h3 [ngClass]="{'text-success': TopSocketdata[item]?.changePercent>0, 'text-warning': TopSocketdata[item]?.changePercent<0 }"> 
+          <a style="cursor: pointer;" [routerLink]="['/company-profile', TopSocketdata[item]?.symbol]">
+            {{TopSocketdata[item]?.symbol}} 
+          </a>
+          <!-- Post Market Start -->
+          <span *ngIf="TopSocketdata2[item]?.post_market_open == true" [ngClass]="{'text-success': (TopSocketdata[item]?.postMarketChange >  0), 'text-warning': (TopSocketdata[item]?.postMarketChange <  0)}">
+                {{TopSocketdata[item]?.postMarketChange > 0 ? '$' : '$' }}{{(TopSocketdata[item]?.postMarketChange ||
+                  TopSocketdata[item]?.postMarketChange == 0) ? ((TopSocketdata[item]?.postMarketChange) |
+                  number : '.2-2' ):"N/A" }} 
+          </span>
+          <!-- Post Market End -->
+          
+          <!-- Pre Market Start --> 
+          <span *ngIf="TopSocketdata2[item]?.pre_market_open == true" [ngClass]="{'text-success': (TopSocketdata[item]?.preMarketChange >  0), 'text-warning': (TopSocketdata[item]?.preMarketChange <  0)}">
+              {{TopSocketdata[item]?.preMarketChange > 0 ? '$' : '$' }}{{(TopSocketdata[item]?.preMarketChange ||
+                TopSocketdata[item]?.preMarketChange == 0) ? ((TopSocketdata[item]?.preMarketChange) |
+                number : '.2-2' ):"N/A" }} 
+           </span>
+           <!-- Post Market End -->
+        </h3>
+        <div class="d-flex justify-content-between mt-1">
+          <p> {{TopSocketdata[item]?.latestVolume ? (TopSocketdata[item]?.latestVolume | AmountFormat: 2): 'N/A'}} |
+            {{TopSocketdata[item]?.avgTotalVolume ? (TopSocketdata[item]?.avgTotalVolume | AmountFormat: 2): 'N/A'}}
+          </p>
+          <p>{{TopSocketdata[item]?.MarketCap?(TopSocketdata[item]?.MarketCap | AmountFormat: 2):'N/A'}} |
+            {{TopSocketdata[item]?.peRatio? (TopSocketdata[item]?.peRatio | number : '.2-2'):'N/A'}}
+          </p>
+         </div>
+        <div class="d-flex top_soket_pr"  [ngClass]="{'text-success': TopSocketdata[item]?.changePercent>0, 'text-warning': TopSocketdata[item]?.changePercent<0 }">
+          <span class="font26">
+            {{TopSocketdata[item]?.changePercent>0?
+            '+': ''}}{{(TopSocketdata[item]?.changePercent || TopSocketdata[item]?.changePercent == 0) ?
+            ((TopSocketdata[item]?.changePercent * 100) | number : '1.2-2' ): 'N/A'}}%</span>
+          <div class="top_sub">
+            <span>
+              {{TopSocketdata[item]?.changePercent  > 0  && TopSocketdata[item]?.change ? '+' :''}}{{TopSocketdata[item]?.change ? (TopSocketdata[item]?.change | number : '.2-2'):'N/A'}}
+            </span>
+            <p class="">${{TopSocketdata[item]?.latestPrice ? (TopSocketdata[item]?.latestPrice | number : '.2-2') :'N/A'}}</p>
+          </div>
+        </div>
+        
+        <button type="button" class="rmv_t5" *ngIf="edittopname"><i class="fa fa-times" aria-hidden="true"
+            (click)="removewtachlist(TopSocketdata[item]?.id)"></i></button>
+      </div>
+    </li>
+  </ul>
+  <div class="grabber" (mouseover)="dragtopsix=false" (mouseout)="dragtopsix=true" (mousedown)="onMouseDown($event)"></div>
+</div>
